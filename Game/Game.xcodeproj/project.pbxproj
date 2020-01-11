@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		811C05DD23C8DF0500A606B8 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 811C05DC23C8DF0500A606B8 /* Shaders.metal */; };
 		811C061323C8E9FB00A606B8 /* JAGER.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811C061223C8E9FB00A606B8 /* JAGER.framework */; };
 		811C061423C8E9FB00A606B8 /* JAGER.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 811C061223C8E9FB00A606B8 /* JAGER.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		81B23C5E23C8D76200F08EF7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B23C5D23C8D76200F08EF7 /* AppDelegate.swift */; };
@@ -33,7 +32,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		811C05DC23C8DF0500A606B8 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		811C061223C8E9FB00A606B8 /* JAGER.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JAGER.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81B23C5A23C8D76200F08EF7 /* Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Game.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81B23C5D23C8D76200F08EF7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -92,7 +90,6 @@
 				81B23C6623C8D76600F08EF7 /* Assets.xcassets */,
 				81B23C6823C8D76600F08EF7 /* LaunchScreen.storyboard */,
 				81B23C6B23C8D76600F08EF7 /* Info.plist */,
-				811C05DC23C8DF0500A606B8 /* Shaders.metal */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -169,7 +166,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				811C05DD23C8DF0500A606B8 /* Shaders.metal in Sources */,
 				81B23C6223C8D76200F08EF7 /* ViewController.swift in Sources */,
 				81B23C5E23C8D76200F08EF7 /* AppDelegate.swift in Sources */,
 				81B23C6023C8D76200F08EF7 /* SceneDelegate.swift in Sources */,
