@@ -16,6 +16,8 @@ This project has the idea to try to build a simple 2D Game Engine with following
 * Support to realtime shadows.
 * Support to tilemap system.
 * Support to basic physics (collision detection for a variety of geometric objects).
+* Support to basic audio system.
+* Support to custom gestures.
 
 # How to build
 
