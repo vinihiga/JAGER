@@ -13,7 +13,7 @@ import JAGER
 class ViewController: GameController  {
 
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad(bundle: Bundle.main)
         // Do any additional setup after loading the view.
 
 

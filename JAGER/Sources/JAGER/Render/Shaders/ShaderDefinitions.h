@@ -12,4 +12,9 @@ struct FragmentUniforms {
     float brightness;
 };
 
+struct VertexIn {
+    float4 position [[ attribute(0) ]];
+    float2 texCoords [[ attribute(1) ]];
+};
+
 #endif /* ShaderDefinitions_h */

@@ -7,71 +7,59 @@
 
 import Foundation
 import Metal
+import MetalKit
 import QuartzCore
 import UIKit
-
-struct FragmentUniforms {
-    var brightness: Float
-}
 
 // TODO: Transformar para singleton
 class RenderingManager {
     
     private var view: UIView!
+    private var device: MTLDevice!
     
-    public var device: MTLDevice!
     public var metalLayer: CAMetalLayer?
-    public var commandQueue: MTLCommandQueue?
-    public var vertexBuffer: MTLBuffer?
-    public var pipelineState: MTLRenderPipelineState?
-    
-    init(view: UIView) {
+
+    init(view: UIView, device: MTLDevice) {
         
         self.view = view
-        self.device = MTLCreateSystemDefaultDevice()
+        self.device = device
         self.metalLayer = CAMetalLayer()
         
-        self.metalLayer!.device = self.device
+        self.metalLayer!.device = device
         self.metalLayer!.pixelFormat = .bgra8Unorm
         self.metalLayer!.framebufferOnly = true
         self.metalLayer!.frame = view.layer.frame
         view.layer.addSublayer(self.metalLayer!)
         
-        let vertexData: [Float] = [
-          0.0,  0.5, 0.0,
-         -0.5, -0.5, 0.0,
-          0.5, -0.5, 0.0
-        ]
         
-        let dataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
-        self.vertexBuffer = self.device.makeBuffer(bytes: vertexData, length: dataSize, options: [])
-
-        let frameworkBundle = Bundle(for: type(of: self))
+    }
+    
+    public func mountRenderPipelineState(vertexShader: String, fragmentShader: String) -> MTLRenderPipelineState {
         
         do {
             
+            let frameworkBundle = Bundle(for: type(of: self))
+            
             // Loading the shaders programs (vertex & fragment / pixel)
-            let defaultLibrary = try self.device?.makeDefaultLibrary(bundle: frameworkBundle)
-            let fragmentProgram = defaultLibrary?.makeFunction(name: "basic_fragment")
-            let vertexProgram = defaultLibrary?.makeFunction(name: "basic_vertex")
+            let defaultLibrary = try device.makeDefaultLibrary(bundle: frameworkBundle)
+            let vertexProgram = defaultLibrary.makeFunction(name: vertexShader)
+            let fragmentProgram = defaultLibrary.makeFunction(name: fragmentShader)
                
             // Building the description for the graphics pipeline
             let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
             pipelineStateDescriptor.vertexFunction = vertexProgram
             pipelineStateDescriptor.fragmentFunction = fragmentProgram
             pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
-//            pipelineStateDescriptor.setValue(1.0, forKey: "deltaTime")
                
-            // Loading the updated pipelijne state
-            pipelineState = try! device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
+            // Loading the updated pipeline state
+            let pipelineState = try self.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
 
+            return pipelineState
+            
         }
         catch {
-            fatalError("Error! Couldn't load the shader files!")
+            fatalError("Error! Couldn't generate the Render Pipeline State!")
         }
-        
-        self.commandQueue = self.device.makeCommandQueue()
-
         
     }
     
