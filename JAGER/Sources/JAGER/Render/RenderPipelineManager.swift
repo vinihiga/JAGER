@@ -12,7 +12,7 @@ import QuartzCore
 import UIKit
 
 // TODO: Transformar para singleton
-class RenderingManager {
+public class RenderPipelineManager {
     
     private var view: UIView!
     private var device: MTLDevice!
