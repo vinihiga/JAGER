@@ -55,18 +55,26 @@ open class GameController: UIViewController {
         let commandBuffer = device.makeCommandQueue()?.makeCommandBuffer()
         let renderEncoder = commandBuffer!.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
+        // Calculating the current viewport size
+        var viewportSize = [Float32]()
+        let frame = self.view.frame
+        
+        viewportSize.append(Float32(frame.width))
+        viewportSize.append(Float32(frame.height))
+        
+        let viewportSizeBuffer = self.device.makeBuffer(bytes: viewportSize, length: viewportSize.count * MemoryLayout<Float32>.stride, options: [])
         
         
-        // Drawing the sprites
+        
+        // Drawing the sprites / game objects now...
 
-
-        let quad = Quad(device: self.device)
+        let quad = Quad(device: self.device, viewportSizeBuffer: viewportSizeBuffer!)
+        
         quad.draw(renderCommandEncoder: renderEncoder, renderPipelineManager: self.renderPipelineManager)
 
 
         
-        // End of "drawing" the sprites
-        
+        // End of "drawing" the sprites... Drawing physically now!
         renderEncoder.endEncoding()
         commandBuffer!.present(drawable!)
         commandBuffer!.commit() // Here is where we really draw the sprites

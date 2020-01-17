@@ -10,6 +10,7 @@ import Metal
 
 public class Quad {
     
+    private var viewportSizeBuffer: MTLBuffer!
     private var verticesBuffer: MTLBuffer!
     private var indexesBuffer: MTLBuffer!
     private var fragmentUniformsBuffer: MTLBuffer!
@@ -17,13 +18,13 @@ public class Quad {
     private var vertices: [Vertex]!
     private var indexes: [UInt16]!
     
-    public init(device: MTLDevice) {
+    public init(device: MTLDevice, viewportSizeBuffer: MTLBuffer) {
         
         self.vertices = [
-            Vertex(position: SIMD4<Float>(-0.5, 0.5, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
-            Vertex(position: SIMD4<Float>(-0.5, -0.5, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
-            Vertex(position: SIMD4<Float>(0.5, 0.5, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
-            Vertex(position: SIMD4<Float>(0.5, -0.5, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0))
+            Vertex(position: SIMD4<Float>(0, 50, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
+            Vertex(position: SIMD4<Float>(0, 0, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
+            Vertex(position: SIMD4<Float>(50, 50, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
+            Vertex(position: SIMD4<Float>(50, 0, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0))
         ]
         
         self.indexes = [
@@ -36,6 +37,8 @@ public class Quad {
         
         
         self.verticesBuffer = device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])
+        
+        self.viewportSizeBuffer = viewportSizeBuffer
         
         self.indexesBuffer = device.makeBuffer(bytes: indexes, length: indexes.count * MemoryLayout<UInt16>.stride, options: [])
         
@@ -51,10 +54,14 @@ public class Quad {
     /// - Parameter renderCommandEncoder: Render Command Encoder for passing into the GPU.
     public func draw(renderCommandEncoder: MTLRenderCommandEncoder, renderPipelineManager: RenderPipelineManager) {
         
+        
         renderCommandEncoder.setRenderPipelineState(renderPipelineManager
             .mountRenderPipelineState(vertexShader: "basic_vertex", fragmentShader: "basic_fragment"))
         
         renderCommandEncoder.setVertexBuffer(self.verticesBuffer, offset: 0, index: 0)
+        
+        renderCommandEncoder.setVertexBuffer(self.viewportSizeBuffer, offset: 0, index: 1)
+        
         renderCommandEncoder.setFragmentBuffer(self.fragmentUniformsBuffer, offset: 0, index: 0)
 
 
