@@ -28,14 +28,14 @@ public class RigidBody {
         self.mass = 1.0
     }
     
-    public func fall() {
-        self.currentFallingSpeed += (self.mass * 9.807) * 1/60 // TODO: Allow change the gravational force accel. value
+    public func fall(force: CGFloat) {
+        self.currentFallingSpeed += force * 1/60
         self.entity.position.y -= self.currentFallingSpeed
     }
     
-    public func jump() {
-        self.currentFallingSpeed = 0 // DEBUG: Debugging the falling speed
-        self.entity.position.y = 0
+    public func jump(force: CGFloat) {
+        self.currentFallingSpeed = (self.mass * -600) * 1/60
+        self.entity.position.y += self.currentFallingSpeed
     }
     
 }

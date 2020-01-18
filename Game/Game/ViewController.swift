@@ -29,7 +29,7 @@ class ViewController: GameController  {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.player.rigidBody?.jump()
+        self.player.rigidBody?.jump(force: Physics.addForce(mass: 1, acceleration: 600))
     }
 
 

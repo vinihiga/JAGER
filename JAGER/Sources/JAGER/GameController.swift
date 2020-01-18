@@ -59,7 +59,7 @@ open class GameController: UIViewController {
                 // Physics related
                 for entity in self.entities {
                     if entity.rigidBody != nil {
-                        entity.rigidBody!.fall()
+                        entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
                     }
                 }
                 
