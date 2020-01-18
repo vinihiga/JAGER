@@ -11,6 +11,11 @@ import MetalKit
 import QuartzCore
 import UIKit
 
+struct FragmentUniforms {
+    var brightness: Float
+    var color: SIMD4<Float>
+}
+
 // TODO: Transformar para singleton
 public class RenderPipelineManager {
     
