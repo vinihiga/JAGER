@@ -12,10 +12,11 @@ import CoreGraphics
 public class Sprite {
     
     public var color: SIMD4<Float>!
-    public var position: CGPoint!
+    public var position: CGPoint { get { return self.entity?.position ?? CGPoint.zero } }
     public var size: CGSize!
     
     private var gameController: GameController!
+    private var entity: Entity?
     private var verticesBuffer: MTLBuffer!
     private var indexesBuffer: MTLBuffer!
     private var fragmentUniformsBuffer: MTLBuffer!
@@ -23,13 +24,13 @@ public class Sprite {
     private var vertices: [Vertex]!
     private var indexes: [UInt16]!
     
-    public init(gameController: GameController, size: CGSize, position: CGPoint, color: SIMD4<Float>) {
+    init(gameController: GameController, entity: Entity, size: CGSize, color: SIMD4<Float>) {
         
         self.gameController = gameController
         
         self.color = color
-        self.position = position
         self.size = size
+        self.entity = entity
         
         
     }
@@ -38,7 +39,24 @@ public class Sprite {
     
     /// Draws the Quad into the screen by passing the Render Command Encoder.
     /// - Parameter renderCommandEncoder: Render Command Encoder for passing into the GPU.
-    public func draw(renderCommandEncoder: MTLRenderCommandEncoder, renderPipelineManager: RenderPipelineManager) {
+    func draw(renderCommandEncoder: MTLRenderCommandEncoder, renderPipelineManager: RenderPipelineManager) {
+        
+        self.mountGeometryBuffer()
+        
+        renderCommandEncoder.setRenderPipelineState(renderPipelineManager.mountRenderPipelineState(vertexShader: "basic_vertex", fragmentShader: "basic_fragment"))
+        
+        renderCommandEncoder.setVertexBuffer(self.verticesBuffer, offset: 0, index: 0)
+        renderCommandEncoder.setVertexBuffer(self.gameController.viewportSizeBuffer, offset: 0, index: 1)
+        renderCommandEncoder.setFragmentBuffer(self.fragmentUniformsBuffer, offset: 0, index: 0)
+
+        renderCommandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: self.indexes.count, indexType: .uint16, indexBuffer: self.indexesBuffer!, indexBufferOffset: 0)
+        
+    }
+    
+    
+    
+    /// Genrates the Vertices and the Fragments buffers for the draw method.
+    private func mountGeometryBuffer() {
         
         self.vertices = [
             Vertex(
@@ -75,21 +93,7 @@ public class Sprite {
         self.fragmentUniformsBuffer = self.gameController.device.makeBuffer(bytes: fragmentUniforms, length: fragmentUniforms.count * MemoryLayout<FragmentUniforms>.stride, options: [])
         
         
-        
-        
-        
-        
-        renderCommandEncoder.setRenderPipelineState(renderPipelineManager
-            .mountRenderPipelineState(vertexShader: "basic_vertex", fragmentShader: "basic_fragment"))
-        
-        renderCommandEncoder.setVertexBuffer(self.verticesBuffer, offset: 0, index: 0)
-        
-        renderCommandEncoder.setVertexBuffer(self.gameController.viewportSizeBuffer, offset: 0, index: 1)
-        
-        renderCommandEncoder.setFragmentBuffer(self.fragmentUniformsBuffer, offset: 0, index: 0)
-
-
-        renderCommandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: self.indexes.count, indexType: .uint16, indexBuffer: self.indexesBuffer!, indexBufferOffset: 0)
     }
+    
     
 }

@@ -21,7 +21,7 @@ open class GameController: UIViewController {
     private var previousFrameTime: TimeInterval = 0
     private var gameBundle: Bundle!
     
-    private var player: Player!
+    private var entities = [Entity]()
 
     open func viewDidLoad(bundle: Bundle) {
         super.viewDidLoad()
@@ -40,16 +40,40 @@ open class GameController: UIViewController {
         
         self.viewportSizeBuffer = self.device.makeBuffer(bytes: viewportSize, length: viewportSize.count * MemoryLayout<Float32>.stride, options: [])
         
-        self.player = Player(
-            gameController: self,
-            size: CGSize(width: 64, height: 64),
-            position: CGPoint(x: 0, y: 0),
-            color: SIMD4<Float>(1.0, 0.0, 0.0, 1.0))
-        
+        // Creating and initializing the Game's main loop
         self.variableTimeUpdater = CADisplayLink(target: self, selector: #selector(tick))
         self.variableTimeUpdater.add(to: RunLoop.main, forMode: .default)
         
     }
+
+    
+    
+    /// Main Game Loop.
+    @objc private func tick() {
+        autoreleasepool {
+            
+            if (self.previousFrameTime != 0) {
+                
+                let deltaTime = Date().timeIntervalSince1970 - self.previousFrameTime
+                
+                // Physics related
+                for entity in self.entities {
+                    if entity.rigidBody != nil {
+                        entity.rigidBody!.fall()
+                    }
+                }
+                
+                // Rendering related
+                self.prepareRender(deltaTime: deltaTime)
+                
+            }
+            
+            self.previousFrameTime = Date().timeIntervalSince1970
+            
+        }
+    }
+    
+    
     
     /// Handles the draw calls.
     private func prepareRender(deltaTime: TimeInterval) {
@@ -64,10 +88,10 @@ open class GameController: UIViewController {
         renderPassDescriptor.colorAttachments[0].texture = drawable?.texture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(
-          red: 0.0,
-          green: 0.0,
-          blue: 0.2,
-          alpha: 1.0)
+                                                                      red: 0.0,
+                                                                      green: 0.0,
+                                                                      blue: 0.2,
+                                                                      alpha: 1.0)
         
         
 
@@ -78,48 +102,41 @@ open class GameController: UIViewController {
         self.render(deltaTime: deltaTime, currentRenderEncoder: currentRenderEncoder)
 
         
-        // End of "drawing" the sprites... Drawing physically now!
         currentRenderEncoder.endEncoding()
         commandBuffer!.present(drawable!)
-        commandBuffer!.commit() // Here is where we really draw the sprites
+        commandBuffer!.commit() // NOTE: Here is where we really draw the sprites on the GPU
 
     }
     
-    /// Main Game Loop.
-    @objc private func tick() {
-        autoreleasepool {
+    
+    
+    /// Renders the sprites on the screen.
+    /// NOTE: This is called by default after the physics and input calculation!
+    /// - Parameters:
+    ///   - deltaTime: The frame delta time in relation of the previous and current frame time.
+    ///   - currentRenderEncoder: (DO NOT MODIFY) Current Render Encoder of the GPU.
+    private func render(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
+        
+        for entity in self.entities {
             
-            if (self.previousFrameTime != 0) {
-                
-                let deltaTime = Date().timeIntervalSince1970 - self.previousFrameTime
-                
-                // Physics related
-                self.player.rigidBody.currentFallingSpeed += 9.807 * 1/60 // TODO: Calculate current fps and divide by one
-                self.player.position.y -= self.player.rigidBody.currentFallingSpeed
-                
-                
-                // Rendering related
-                self.prepareRender(deltaTime: deltaTime)
-                
+            if let player = entity as? Player {
+                player.sprite.color = SIMD4<Float>(Float(0.5),
+                                             Float(0.5 + 0.5 * sin(Date().timeIntervalSince1970)),
+                                             Float(0.5 + 0.5 * cos(Date().timeIntervalSince1970)),
+                                             Float(1.0))
             }
             
-            self.previousFrameTime = Date().timeIntervalSince1970
-            
+            entity.sprite.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
         }
+        
     }
     
-    public func render(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
-        
-        // Drawing the sprites / game objects now...
-        self.player.color = SIMD4<Float>(Float(0.5),
-                                         Float(0.5 + 0.5 * sin(Date().timeIntervalSince1970)),
-                                         Float(0.5 + 0.5 * cos(Date().timeIntervalSince1970)),
-                                         Float(1.0))
-        
-
-        self.player.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
-
-        
+    
+    
+    /// Adds a new entity into the current scene.
+    /// - Parameter entity: A desired entity or inherited class instance that derives from entity to be added
+    public func addEntity(_ entity: Entity) {
+        self.entities.append(entity)
     }
     
 }
