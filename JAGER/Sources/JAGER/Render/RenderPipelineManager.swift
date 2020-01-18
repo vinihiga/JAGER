@@ -29,8 +29,12 @@ public class RenderPipelineManager {
         self.metalLayer!.pixelFormat = .bgra8Unorm
         self.metalLayer!.framebufferOnly = true
         self.metalLayer!.frame = view.layer.frame
+        
+        self.metalLayer!.zPosition = -1
+        
         view.layer.addSublayer(self.metalLayer!)
         
+
         
     }
     

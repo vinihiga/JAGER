@@ -17,7 +17,6 @@ open class GameController: UIViewController {
     private var renderPipelineManager: RenderPipelineManager!
     private var timer: CADisplayLink! // Synchronized to the display refresh rate
     private var gameBundle: Bundle!
-    private var renderPipelineState: MTLRenderPipelineState?
 
     open func viewDidLoad(bundle: Bundle) {
         super.viewDidLoad()
@@ -68,7 +67,12 @@ open class GameController: UIViewController {
         
         // Drawing the sprites / game objects now...
 
-        let quad = Quad(device: self.device, viewportSizeBuffer: viewportSizeBuffer!)
+        let quad = Quad(
+            device: self.device,
+            viewportSizeBuffer: viewportSizeBuffer!,
+            size: CGSize(width: 64, height: 64),
+            position: CGPoint(x: 0, y: 0),
+            color: SIMD4<Float>(1.0, 0.0, 0.0, 1.0))
         
         quad.draw(renderCommandEncoder: renderEncoder, renderPipelineManager: self.renderPipelineManager)
 

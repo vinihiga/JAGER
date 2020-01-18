@@ -10,6 +10,7 @@
 
 struct FragmentUniforms {
     float brightness;
+    float4 color [[ attribute(2) ]];
 };
 
 struct VertexIn {

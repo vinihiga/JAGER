@@ -7,6 +7,7 @@
 
 import Foundation
 import Metal
+import CoreGraphics
 
 public class Quad {
     
@@ -18,13 +19,25 @@ public class Quad {
     private var vertices: [Vertex]!
     private var indexes: [UInt16]!
     
-    public init(device: MTLDevice, viewportSizeBuffer: MTLBuffer) {
+    public init(device: MTLDevice, viewportSizeBuffer: MTLBuffer, size: CGSize, position: CGPoint, color: SIMD4<Float>) {
         
         self.vertices = [
-            Vertex(position: SIMD4<Float>(0, 50, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
-            Vertex(position: SIMD4<Float>(0, 0, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
-            Vertex(position: SIMD4<Float>(50, 50, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0)),
-            Vertex(position: SIMD4<Float>(50, 0, 0.0, 1.0), texCoords: SIMD2<Float>(repeating: 0.0))
+            Vertex(
+                position: SIMD4<Float>(Float(position.x - size.width / 2.0), Float(position.y + size.height / 2.0), 0.0, 1.0),
+                texCoords: SIMD2<Float>(repeating: 0.0)
+            ),
+            Vertex(
+                position: SIMD4<Float>(Float(position.x - size.width / 2.0), Float(position.y - size.height / 2.0), 0.0, 1.0),
+                texCoords: SIMD2<Float>(repeating: 0.0)
+            ),
+            Vertex(
+                position: SIMD4<Float>(Float(position.x + size.width / 2.0), Float(position.y + size.height / 2.0), 0.0, 1.0),
+                texCoords: SIMD2<Float>(repeating: 0.0)
+            ),
+            Vertex(
+                position: SIMD4<Float>(Float(position.x + size.width / 2.0), Float(position.y - size.height / 2.0), 0.0, 1.0),
+                texCoords: SIMD2<Float>(repeating: 0.0)
+            )
         ]
         
         self.indexes = [
@@ -33,7 +46,7 @@ public class Quad {
         ]
         
         
-        let fragmentUniforms = [FragmentUniforms(brightness: 1.0)]
+        let fragmentUniforms = [FragmentUniforms(brightness: 1.0, color: color)]
         
         
         self.verticesBuffer = device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])

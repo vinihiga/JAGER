@@ -9,13 +9,9 @@ import Foundation
 import Metal
 import MetalKit
 
-struct Vertex {
-    var position: SIMD4<Float>
-    var texCoords: SIMD2<Float>
-}
-
 struct FragmentUniforms {
     var brightness: Float
+    var color: SIMD4<Float>
 }
 
 class Sprite {
