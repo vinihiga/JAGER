@@ -21,14 +21,14 @@ open class GameController: UIViewController {
     private var previousFrameTime: TimeInterval = 0
     private var gameBundle: Bundle!
     
-    private var entities = [Entity]()
+    public var entities = [Entity]()
 
     open func viewDidLoad(bundle: Bundle) {
         super.viewDidLoad()
         
         self.device = MTLCreateSystemDefaultDevice()
         self.gameBundle = bundle
-        self.renderPipelineManager = RenderPipelineManager(view: self.view, device: self.device)
+        self.renderPipelineManager = RenderPipelineManager.getInstance(view: self.view, device: self.device)
         
         // TODO: Make change the viewport size when the screen rotates...
         // Calculating the current viewport size
@@ -60,7 +60,7 @@ open class GameController: UIViewController {
                 self.recalculateDynamics()
                 
                 // Update Entities
-                self.updateEntities(deltaTime: deltaTime)
+                self.updateScene(deltaTime: deltaTime)
                 
                 // Rendering related
                 self.prepareRender(deltaTime: deltaTime)
@@ -75,7 +75,8 @@ open class GameController: UIViewController {
     
     
     /// Handles the Physics on the Entities.
-    private func recalculateDynamics() {
+    /// NOTE: This is called by default before every subsystem (e.g. update entities)!
+    open func recalculateDynamics() {
         for entity in self.entities {
             if entity.rigidBody != nil {
                 if entity.rigidBody!.isEnabled {
@@ -88,8 +89,9 @@ open class GameController: UIViewController {
     
     
     /// Handles the Entities ticks (user setted some sort of update) or removes from the memory.
+    /// NOTE: This is called by default after the physics calculation!
     /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
-    private func updateEntities(deltaTime: TimeInterval) {
+    private func updateScene(deltaTime: TimeInterval) {
         
         var currentIndex = 0
         
@@ -107,8 +109,8 @@ open class GameController: UIViewController {
     
     
     
-    
     /// Handles the draw calls.
+    /// NOTE: This is called by default after the physics and entities updates!
     /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
     private func prepareRender(deltaTime: TimeInterval) {
         
@@ -145,14 +147,13 @@ open class GameController: UIViewController {
     
     
     /// Renders the sprites on the screen.
-    /// NOTE: This is called by default after the physics and input calculation!
     /// - Parameters:
     ///   - deltaTime: The frame delta time in relation of the previous and current frame time.
     ///   - currentRenderEncoder: (DO NOT MODIFY) Current Render Encoder of the GPU.
-    private func render(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
+    open func render(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
         
         for entity in self.entities {
-            entity.sprite.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
+            entity.sprite?.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
         }
         
     }

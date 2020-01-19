@@ -12,7 +12,7 @@ open class Entity {
     
     public var position: CGPoint
     public var rigidBody: RigidBody?
-    public var sprite: Sprite!
+    public var sprite: Sprite?
     public var controller: GameController!
     
     private(set) var isSetToDestroy: Bool!
@@ -25,6 +25,15 @@ open class Entity {
         
         self.isSetToDestroy = false
 
+    }
+    
+    public init(controller: GameController, position: CGPoint) {
+        
+        self.position = position
+        self.controller = controller
+        
+        self.isSetToDestroy = false
+        
     }
     
     open func tick(deltaTime: TimeInterval) {

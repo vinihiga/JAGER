@@ -16,15 +16,21 @@ struct FragmentUniforms {
     var color: SIMD4<Float>
 }
 
-// TODO: Transformar para singleton
 public class RenderPipelineManager {
     
     private var view: UIView!
     private var device: MTLDevice!
+    private static var instance: RenderPipelineManager?
     
     public var metalLayer: CAMetalLayer?
 
-    init(view: UIView, device: MTLDevice) {
+    
+    
+    /// Default private initializer for creating the Rendering Pipeline Manager.
+    /// - Parameters:
+    ///   - view: Main UIView for creating the Metal Layer for rendering 2D/3D graphics.
+    ///   - device: GPU interface for passing buffers.
+    private init(view: UIView, device: MTLDevice) {
         
         self.view = view
         self.device = device
@@ -37,12 +43,17 @@ public class RenderPipelineManager {
         
         self.metalLayer!.zPosition = -1
         
-        view.layer.addSublayer(self.metalLayer!)
-        
-
+        view.layer.addSublayer(self.metalLayer!) // TODO: Adicionar um deinit para remover essa layer do metal quando finalizar o jogo?
         
     }
     
+    
+    
+    
+    /// Mounts the current Pipeline State for the current frame.
+    /// - Parameters:
+    ///   - vertexShader: Vertex Shader function name
+    ///   - fragmentShader: Fragment Shader function name
     public func mountRenderPipelineState(vertexShader: String, fragmentShader: String) -> MTLRenderPipelineState {
         
         do {
@@ -72,4 +83,19 @@ public class RenderPipelineManager {
         
     }
     
+    
+    
+    
+    /// Creates or load a previous instance of the Render Pipeline Manager
+    /// - Parameters:
+    ///   - view: Main UIView for creating the Metal Layer for rendering 2D/3D graphics.
+    ///   - device: GPU interface for passing buffers.
+    static public func getInstance(view: UIView, device: MTLDevice) -> RenderPipelineManager {
+        
+        if RenderPipelineManager.instance == nil {
+            RenderPipelineManager.instance = RenderPipelineManager(view: view, device: device)
+        }
+        
+        return RenderPipelineManager.instance!
+    }
 }

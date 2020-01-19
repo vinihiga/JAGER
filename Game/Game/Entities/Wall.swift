@@ -19,7 +19,7 @@ class Wall: Entity {
     
     override func tick(deltaTime: TimeInterval) {
         
-        if (self.position.x) < (-self.controller.view.frame.width - self.sprite.size.width) {
+        if (self.position.x) < (-self.controller.view.frame.width - (self.sprite?.size.width)!) {
             self.destroy()
         }
         

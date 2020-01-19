@@ -18,6 +18,10 @@ public class RigidBody {
     private var entity: Entity! // TODO: Change to support generic types
     private var currentFallingSpeed: CGFloat = 0.0
     
+    
+    
+    /// Default initializer for creating a Rigid Body on a selected Entity.
+    /// - Parameter entity: Entity to be handled by the Rigid Body subsystem
     init(entity: Entity) {
         
         self.entity = entity
@@ -28,13 +32,23 @@ public class RigidBody {
         self.mass = 1.0
     }
     
+    
+    // TOOD: Checar diferença entre força e impulso para esse caso específico (plataforma 2D)
+    
+    /// Creates a falling mechanics on the current selected entity.
+    /// - Parameter force: Desired amount of force
     public func fall(force: CGFloat) {
-        self.currentFallingSpeed += force * 1/60
+        self.currentFallingSpeed += force * Physics.DYNAMICS_DESIRED_FRAMES_PER_SECOND
         self.entity.position.y -= self.currentFallingSpeed
     }
     
+    
+    
+    
+    /// Creates a jump mechanics on the current selected entity.
+    /// - Parameter force: Desired amount of force
     public func jump(force: CGFloat) {
-        self.currentFallingSpeed = (self.mass * -600) * 1/60
+        self.currentFallingSpeed = -force * Physics.DYNAMICS_DESIRED_FRAMES_PER_SECOND
         self.entity.position.y += self.currentFallingSpeed
     }
     
