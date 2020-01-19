@@ -13,16 +13,26 @@ open class Entity {
     public var position: CGPoint
     public var rigidBody: RigidBody?
     public var sprite: Sprite!
+    public var controller: GameController!
     
-    private var gameController: GameController!
+    private(set) var isSetToDestroy: Bool!
     
-    public init(gameController: GameController, size: CGSize, position: CGPoint, color: SIMD4<Float>) {
+    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD4<Float>) {
         
         self.position = position
-        self.gameController = gameController
-        self.sprite = Sprite(gameController: gameController, entity: self, size: size, color: color)
+        self.controller = controller
+        self.sprite = Sprite(controller: controller, entity: self, size: size, color: color)
         
-        self.rigidBody = RigidBody(entity: self)
+        self.isSetToDestroy = false
+
+    }
+    
+    open func tick(deltaTime: TimeInterval) {
+        
+    }
+    
+    public func destroy() {
+        self.isSetToDestroy = true
     }
 
     

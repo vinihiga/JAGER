@@ -15,7 +15,7 @@ public class Sprite {
     public var position: CGPoint { get { return self.entity?.position ?? CGPoint.zero } }
     public var size: CGSize!
     
-    private var gameController: GameController!
+    private var controller: GameController!
     private var entity: Entity?
     private var verticesBuffer: MTLBuffer!
     private var indexesBuffer: MTLBuffer!
@@ -24,9 +24,9 @@ public class Sprite {
     private var vertices: [Vertex]!
     private var indexes: [UInt16]!
     
-    init(gameController: GameController, entity: Entity, size: CGSize, color: SIMD4<Float>) {
+    init(controller: GameController, entity: Entity, size: CGSize, color: SIMD4<Float>) {
         
-        self.gameController = gameController
+        self.controller = controller
         
         self.color = color
         self.size = size
@@ -46,7 +46,7 @@ public class Sprite {
         renderCommandEncoder.setRenderPipelineState(renderPipelineManager.mountRenderPipelineState(vertexShader: "basic_vertex", fragmentShader: "basic_fragment"))
         
         renderCommandEncoder.setVertexBuffer(self.verticesBuffer, offset: 0, index: 0)
-        renderCommandEncoder.setVertexBuffer(self.gameController.viewportSizeBuffer, offset: 0, index: 1)
+        renderCommandEncoder.setVertexBuffer(self.controller.viewportSizeBuffer, offset: 0, index: 1)
         renderCommandEncoder.setFragmentBuffer(self.fragmentUniformsBuffer, offset: 0, index: 0)
 
         renderCommandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: self.indexes.count, indexType: .uint16, indexBuffer: self.indexesBuffer!, indexBufferOffset: 0)
@@ -86,11 +86,11 @@ public class Sprite {
         let fragmentUniforms = [FragmentUniforms(brightness: 1.0, color: color)]
         
         
-        self.verticesBuffer = self.gameController.device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])
+        self.verticesBuffer = self.controller.device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])
         
-        self.indexesBuffer = self.gameController.device.makeBuffer(bytes: indexes, length: indexes.count * MemoryLayout<UInt16>.stride, options: [])
+        self.indexesBuffer = self.controller.device.makeBuffer(bytes: indexes, length: indexes.count * MemoryLayout<UInt16>.stride, options: [])
         
-        self.fragmentUniformsBuffer = self.gameController.device.makeBuffer(bytes: fragmentUniforms, length: fragmentUniforms.count * MemoryLayout<FragmentUniforms>.stride, options: [])
+        self.fragmentUniformsBuffer = self.controller.device.makeBuffer(bytes: fragmentUniforms, length: fragmentUniforms.count * MemoryLayout<FragmentUniforms>.stride, options: [])
         
         
     }

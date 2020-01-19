@@ -57,11 +57,10 @@ open class GameController: UIViewController {
                 let deltaTime = Date().timeIntervalSince1970 - self.previousFrameTime
                 
                 // Physics related
-                for entity in self.entities {
-                    if entity.rigidBody != nil {
-                        entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
-                    }
-                }
+                self.recalculateDynamics()
+                
+                // Update Entities
+                self.updateEntities(deltaTime: deltaTime)
                 
                 // Rendering related
                 self.prepareRender(deltaTime: deltaTime)
@@ -75,7 +74,42 @@ open class GameController: UIViewController {
     
     
     
+    /// Handles the Physics on the Entities.
+    private func recalculateDynamics() {
+        for entity in self.entities {
+            if entity.rigidBody != nil {
+                if entity.rigidBody!.isEnabled {
+                    entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
+                }
+            }
+        }
+    }
+    
+    
+    
+    /// Handles the Entities ticks (user setted some sort of update) or removes from the memory.
+    /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
+    private func updateEntities(deltaTime: TimeInterval) {
+        
+        var currentIndex = 0
+        
+        // TODO: I think there is some sort of algorithm / data structure that is more faster for handling memory...
+        while currentIndex < self.entities.count {
+            if self.entities[currentIndex].isSetToDestroy {
+                self.entities.remove(at: currentIndex)
+            }
+            else {
+                self.entities[currentIndex].tick(deltaTime: deltaTime)
+                currentIndex += 1
+            }
+        }
+    }
+    
+    
+    
+    
     /// Handles the draw calls.
+    /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
     private func prepareRender(deltaTime: TimeInterval) {
         
         guard let metalLayer = self.renderPipelineManager.metalLayer else {
@@ -118,14 +152,6 @@ open class GameController: UIViewController {
     private func render(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
         
         for entity in self.entities {
-            
-            if let player = entity as? Player {
-                player.sprite.color = SIMD4<Float>(Float(0.5),
-                                             Float(0.5 + 0.5 * sin(Date().timeIntervalSince1970)),
-                                             Float(0.5 + 0.5 * cos(Date().timeIntervalSince1970)),
-                                             Float(1.0))
-            }
-            
             entity.sprite.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
         }
         
