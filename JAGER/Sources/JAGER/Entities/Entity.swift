@@ -12,6 +12,7 @@ open class Entity {
     
     public var position: CGPoint
     public var rigidBody: RigidBody?
+    public var collider: Collider?
     public var sprite: Sprite?
     public var controller: GameController!
     
@@ -36,8 +37,18 @@ open class Entity {
         
     }
     
-    open func tick(deltaTime: TimeInterval) {
+    open func onCollision(with target: Entity) {
         
+        if self.collider == nil {
+            fatalError("Error! Collider's instance on self not found!")
+        }
+        
+        // Do something here...
+        
+    }
+    
+    open func tick(deltaTime: TimeInterval) {
+        // Do something here...
     }
     
     public func destroy() {

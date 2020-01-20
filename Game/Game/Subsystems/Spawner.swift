@@ -34,10 +34,34 @@ class Spawner: Entity {
         
         if currentTimeElapsed >= self.spawnTime {
             
-            self.controller.addEntity(Wall(
-                controller: self.controller,
-                size: CGSize(width: 96, height: self.controller.view.frame.size.height),
-                position: CGPoint(x: self.controller.view.frame.size.width + 48.0, y: -(self.controller.view.frame.size.height / 2.0))))
+            let isBottomTime = Bool.random()
+
+            if isBottomTime {
+
+                self.controller.addEntity(Wall(
+                    controller: self.controller,
+                    size: CGSize(width: 96, height: self.controller.view.frame.size.height),
+                    position: CGPoint(x: self.controller.view.frame.size.width + 48.0, y: self.controller.view.frame.size.height / 2.0)))
+
+                self.controller.addEntity(Wall(
+                    controller: self.controller,
+                    size: CGSize(width: 96, height: self.controller.view.frame.size.height),
+                    position: CGPoint(x: self.controller.view.frame.size.width + 48.0, y: -(self.controller.view.frame.size.height / 2.0) - 512.0)))
+
+            }
+            else {
+
+                self.controller.addEntity(Wall(
+                    controller: self.controller,
+                    size: CGSize(width: 96, height: self.controller.view.frame.size.height),
+                    position: CGPoint(x: self.controller.view.frame.size.width + 48.0, y: self.controller.view.frame.size.height / 2.0 +  512.0)))
+
+                self.controller.addEntity(Wall(
+                    controller: self.controller,
+                    size: CGSize(width: 96, height: self.controller.view.frame.size.height),
+                    position: CGPoint(x: self.controller.view.frame.size.width + 48.0, y: -(self.controller.view.frame.size.height / 2.0))))
+
+            }
             
             self.currentTimeElapsed = 0.0
             

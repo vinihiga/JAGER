@@ -41,7 +41,7 @@ open class GameController: UIViewController {
         self.viewportSizeBuffer = self.device.makeBuffer(bytes: viewportSize, length: viewportSize.count * MemoryLayout<Float32>.stride, options: [])
         
         // Creating and initializing the Game's main loop
-        self.variableTimeUpdater = CADisplayLink(target: self, selector: #selector(tick))
+        self.variableTimeUpdater = CADisplayLink(target: self, selector: #selector(loop))
         self.variableTimeUpdater.add(to: RunLoop.main, forMode: .default)
         
     }
@@ -49,7 +49,7 @@ open class GameController: UIViewController {
     
     
     /// Main Game Loop.
-    @objc private func tick() {
+    @objc private func loop() {
         autoreleasepool {
             
             if (self.previousFrameTime != 0) {
@@ -77,13 +77,39 @@ open class GameController: UIViewController {
     /// Handles the Physics on the Entities.
     /// NOTE: This is called by default before every subsystem (e.g. update entities)!
     open func recalculateDynamics() {
+        
         for entity in self.entities {
+            
+            // Verifying if some body is interacting with the gravity
             if entity.rigidBody != nil {
                 if entity.rigidBody!.isEnabled {
                     entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
                 }
             }
+            
+            // Verifying if some body is intercepting another one
+            if entity.collider != nil {
+                if entity.collider!.isEnabled {
+                    
+                    // TODO: Optimize the algorithm for checking if the previous nodes were checked...
+                    for target in self.entities {
+                        
+                        if target !== entity {
+                            let isCollided = entity.collider!.intercepts(target)
+                            
+                            if isCollided {
+                                entity.onCollision(with: target)
+                            }
+                        }
+                        
+                    }
+                    
+                }
+            }
+            
         }
+        
+        
     }
     
     

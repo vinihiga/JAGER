@@ -15,6 +15,7 @@ open class Character: Entity {
         super.init(controller: controller, size: size, position: position, color: color)
         
         self.rigidBody = RigidBody(entity: self)
+        self.collider = Collider(entity: self)
         
     }
     

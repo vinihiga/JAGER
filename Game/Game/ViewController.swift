@@ -30,12 +30,12 @@ class ViewController: GameController  {
         
         
         // Creating the Spawner Handler for the Walls
-        self.addEntity(Spawner.getInstance(controller: self, position: CGPoint.zero, spawnTime: 2.0))
+        self.addEntity(Spawner.getInstance(controller: self, position: CGPoint.zero, spawnTime: 3.0))
 
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.player.rigidBody?.jump(force: Physics.addForce(mass: 1, acceleration: 600))
+        self.player.rigidBody?.jump(force: Physics.addForce(mass: 1, acceleration: 550))
     }
 
 
