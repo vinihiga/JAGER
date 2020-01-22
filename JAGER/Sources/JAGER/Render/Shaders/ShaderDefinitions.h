@@ -8,14 +8,14 @@
 #ifndef ShaderDefinitions_h
 #define ShaderDefinitions_h
 
-struct FragmentUniforms {
-    float brightness;
-    float4 color [[ attribute(2) ]];
-};
-
 struct VertexIn {
     float4 position [[ attribute(0) ]];
     float2 texCoords [[ attribute(1) ]];
+};
+
+struct FragmentUniforms {
+    float brightness;
+    float4 color [[ attribute(2) ]];
 };
 
 #endif /* ShaderDefinitions_h */

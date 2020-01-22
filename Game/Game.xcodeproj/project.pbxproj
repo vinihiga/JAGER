@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		811C061323C8E9FB00A606B8 /* JAGER.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811C061223C8E9FB00A606B8 /* JAGER.framework */; };
 		811C061423C8E9FB00A606B8 /* JAGER.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 811C061223C8E9FB00A606B8 /* JAGER.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8154991C23D6016600EC6F02 /* Ground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8154991B23D6016600EC6F02 /* Ground.swift */; };
 		81A7D37523D3F36F00FD1435 /* Wall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A7D37423D3F36F00FD1435 /* Wall.swift */; };
 		81B23C5E23C8D76200F08EF7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B23C5D23C8D76200F08EF7 /* AppDelegate.swift */; };
 		81B23C6023C8D76200F08EF7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B23C5F23C8D76200F08EF7 /* SceneDelegate.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		811C061223C8E9FB00A606B8 /* JAGER.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = JAGER.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8154991B23D6016600EC6F02 /* Ground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ground.swift; sourceTree = "<group>"; };
 		81A7D37423D3F36F00FD1435 /* Wall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wall.swift; sourceTree = "<group>"; };
 		81B23C5A23C8D76200F08EF7 /* Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Game.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81B23C5D23C8D76200F08EF7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			children = (
 				81A7D37423D3F36F00FD1435 /* Wall.swift */,
 				81FF7FA623D4056C00C88ECE /* Player.swift */,
+				8154991B23D6016600EC6F02 /* Ground.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 			files = (
 				81BA65BA23D4B6DA00B24ADA /* Spawner.swift in Sources */,
 				81B23C6223C8D76200F08EF7 /* ViewController.swift in Sources */,
+				8154991C23D6016600EC6F02 /* Ground.swift in Sources */,
 				81A7D37523D3F36F00FD1435 /* Wall.swift in Sources */,
 				81B23C5E23C8D76200F08EF7 /* AppDelegate.swift in Sources */,
 				81FF7FA723D4056C00C88ECE /* Player.swift in Sources */,
@@ -349,6 +353,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = vinigames.Game;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SHOWFPS";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

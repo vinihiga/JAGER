@@ -18,7 +18,7 @@ open class Entity {
     
     private(set) var isSetToDestroy: Bool!
     
-    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD4<Float>) {
+    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
         
         self.position = position
         self.controller = controller

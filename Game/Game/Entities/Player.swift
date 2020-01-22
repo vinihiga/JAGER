@@ -12,12 +12,16 @@ import JAGER
 
 class Player: Character {
     
+    override init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
+        super.init(controller: controller, size: size, position: position, color: color)
+
+    }
+    
     override func tick(deltaTime: TimeInterval) {
         
-        self.sprite?.color = SIMD4<Float>(Float(0.5),
+        self.sprite?.color = SIMD3<Float>(Float(0.5),
                                             Float(0.5 + 0.5 * sin(Date().timeIntervalSince1970)),
-                                            Float(0.5 + 0.5 * cos(Date().timeIntervalSince1970)),
-                                            Float(1.0))
+                                            Float(0.5 + 0.5 * cos(Date().timeIntervalSince1970)))
     }
     
 }

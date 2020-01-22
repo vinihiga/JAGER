@@ -11,11 +11,6 @@ import MetalKit
 import QuartzCore
 import UIKit
 
-struct FragmentUniforms {
-    var brightness: Float
-    var color: SIMD4<Float>
-}
-
 public class RenderPipelineManager {
     
     private var view: UIView!
@@ -70,6 +65,15 @@ public class RenderPipelineManager {
             pipelineStateDescriptor.vertexFunction = vertexProgram
             pipelineStateDescriptor.fragmentFunction = fragmentProgram
             pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+            
+            // Setting the blending configurations
+            pipelineStateDescriptor.colorAttachments[0].isBlendingEnabled = true
+            pipelineStateDescriptor.colorAttachments[0].rgbBlendOperation = .add
+            pipelineStateDescriptor.colorAttachments[0].alphaBlendOperation = .add
+            pipelineStateDescriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+            pipelineStateDescriptor.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
+            pipelineStateDescriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
+            pipelineStateDescriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
                
             // Loading the updated pipeline state
             let pipelineState = try self.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)

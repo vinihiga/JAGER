@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Player.png",
+      "filename" : "SPR_Player.png",
       "scale" : "1x"
     },
     {

@@ -11,7 +11,7 @@ import MetalKit
 
 open class Character: Entity {
     
-    override public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD4<Float>) {
+    override public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
         super.init(controller: controller, size: size, position: position, color: color)
         
         self.rigidBody = RigidBody(entity: self)

@@ -50,8 +50,16 @@ public class RigidBody {
     public func jump(force: CGFloat) {
         if self.isEnabled {
             self.currentFallingSpeed = -force * Physics.DYNAMICS_DESIRED_FRAMES_PER_SECOND
-            self.entity.position.y += self.currentFallingSpeed
+            //self.entity.position.y += self.currentFallingSpeed
         }
+    }
+    
+    
+    
+    
+    /// Resets the dynamics state to the initial state, where all values are equal to zero.
+    public func reset() {
+        self.currentFallingSpeed = 0.0
     }
     
 }
