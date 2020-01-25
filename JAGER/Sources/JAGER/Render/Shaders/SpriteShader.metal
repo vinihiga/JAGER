@@ -39,10 +39,7 @@ fragment half4 sprite_fragment(VertexIn vertexMap [[ stage_in ]],
     float4 color = texture.sample(s, vertexMap.texCoords);
     
     if (uniforms.color.a == 0.0) {
-        return half4(color.r * uniforms.brightness * uniforms.color.r,
-                    color.g * uniforms.brightness * uniforms.color.g,
-                    color.b * uniforms.brightness * uniforms.color.b,
-                    0);
+        return half4(0, 0, 0, 0);
     }
     
     return half4(color.r * uniforms.brightness * uniforms.color.r,
