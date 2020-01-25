@@ -25,8 +25,10 @@ vertex float4 basic_vertex(const device VertexIn* vertices [[ buffer(0) ]],
     
 }
 
-fragment half4 basic_fragment(constant FragmentUniforms &uniforms [[ buffer(0) ]]) {
+fragment half4 basic_fragment(constant FragmentUniforms &uniforms [[ buffer(0) ]],
+                              texture2d<float, access::read> texture [[ texture(0) ]]) {
     
     return half4(uniforms.color.r * uniforms.brightness, uniforms.color.g * uniforms.brightness, uniforms.color.b * uniforms.brightness, uniforms.color.a);
+
 }
 

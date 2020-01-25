@@ -17,13 +17,13 @@ open class GameController: UIViewController {
     public static let REQUIRED_FRAMETIME: Int = 60
     
     // GPU Variables
-    private(set) var device: MTLDevice!
+    public var device: MTLDevice! // TODO: Create a GET only property for outside of this module
     private(set) var viewportSizeBuffer: MTLBuffer!
     
     // Core Variables
     private var renderPipelineManager: RenderPipelineManager!
     private var variableTimeUpdater: CADisplayLink! // Used for Physics, Rendering, Networking, HUD and Input
-    private var gameBundle: Bundle!
+    private(set) var gameBundle: Bundle!
     
     // Debugging Variables
     private var currentTimeToCalcFPS: TimeInterval = 0

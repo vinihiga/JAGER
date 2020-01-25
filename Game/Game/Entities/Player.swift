@@ -8,13 +8,19 @@
 
 import Foundation
 import CoreGraphics
+import MetalKit
 import JAGER
 
 class Player: Character {
     
-    override init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
-        super.init(controller: controller, size: size, position: position, color: color)
-
+    init(controller: GameController, size: CGSize, position: CGPoint) {
+        super.init(
+            controller: controller,
+            size: size,
+            position: position,
+            color: SIMD3<Float>(repeating: 1.0),
+            texture: "SPR_Player")
+        
     }
     
     override func tick(deltaTime: TimeInterval) {

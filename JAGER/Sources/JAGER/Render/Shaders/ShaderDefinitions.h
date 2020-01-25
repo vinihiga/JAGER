@@ -13,6 +13,11 @@ struct VertexIn {
     float2 texCoords [[ attribute(1) ]];
 };
 
+struct VertexOut {
+    float4 position [[ position ]];
+    float2 texCoords;
+};
+
 struct FragmentUniforms {
     float brightness;
     float4 color [[ attribute(2) ]];

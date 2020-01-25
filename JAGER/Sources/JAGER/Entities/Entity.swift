@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreGraphics
+import MetalKit
 
 open class Entity {
     
@@ -23,6 +24,22 @@ open class Entity {
         self.position = position
         self.controller = controller
         self.sprite = Sprite(controller: controller, entity: self, size: size, color: color)
+        
+        self.isSetToDestroy = false
+
+    }
+    
+    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
+        
+        self.position = position
+        self.controller = controller
+        self.sprite = Sprite(controller: controller,
+                             entity: self,
+                             size: size,
+                             color: color,
+                             customShaders: customShaders,
+                             texture: texture)
+        
         
         self.isSetToDestroy = false
 
