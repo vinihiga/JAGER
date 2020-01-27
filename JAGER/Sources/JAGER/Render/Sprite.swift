@@ -66,7 +66,7 @@ public class Sprite {
         self.loader = MTKTextureLoader(device: controller.device)
         
         do {
-            let url = self.controller.gameBundle.url(forResource: texture, withExtension: "png")
+            let url = self.controller.gameBundle.url(forResource: texture, withExtension: "png", subdirectory: "Sprites")
             self.texture = try self.loader!.newTexture(URL: url!, options: nil)
         }
         catch {

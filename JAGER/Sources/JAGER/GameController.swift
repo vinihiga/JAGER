@@ -285,6 +285,10 @@ open class GameController: UIViewController {
     // IOS RELATED FUNCTIONS BELOW //
     // --------------------------- //
     
+    override open func viewDidLoad() {
+        fatalError("Error! Do not use this viewDidLoad(), instead use viewDidLoad(bundle:) for the game!")
+    }
+    
     override open var prefersStatusBarHidden: Bool {
         return true
     }
