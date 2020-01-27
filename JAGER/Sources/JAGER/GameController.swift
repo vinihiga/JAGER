@@ -10,6 +10,7 @@ import Foundation
 import Metal
 import QuartzCore
 import UIKit
+import CoreGraphics
 
 open class GameController: UIViewController {
     
@@ -28,8 +29,10 @@ open class GameController: UIViewController {
     // Debugging Variables
     private var currentTimeToCalcFPS: TimeInterval = 0
     private var amountFrames: Int = 0
+    open var fpsLabel: UILabel?
     
     // Scene related Variables
+    public var userInterfaces = [UIView]()
     public var entities = [Entity]()
     
     
@@ -42,6 +45,7 @@ open class GameController: UIViewController {
         self.renderPipelineManager = RenderPipelineManager.getInstance(view: self.view, device: self.device)
         
         // TODO: Make change the viewport size when the screen rotates...
+        
         // Calculating the current viewport size
         var viewportSize = [Float32]()
         let frame = self.view.frame
@@ -51,12 +55,43 @@ open class GameController: UIViewController {
         
         self.viewportSizeBuffer = self.device.makeBuffer(bytes: viewportSize, length: viewportSize.count * MemoryLayout<Float32>.stride, options: [])
         
+        // Drawing the UI
+        self.atStartRenderUI()
+        
         // Creating and initializing the Game's main loop
         self.variableTimeUpdater = CADisplayLink(target: self, selector: #selector(loop)) // FPS Error
         self.variableTimeUpdater.add(to: RunLoop.main, forMode: .default)
         self.variableTimeUpdater.preferredFramesPerSecond = GameController.REQUIRED_FRAMETIME
     
         
+        
+    }
+    
+    
+    
+    /// Renders at the start of the engine the User's Interfaces.
+    open func atStartRenderUI() {
+     
+        let frame = self.view.frame
+        
+        // FPS related label
+        self.fpsLabel = UILabel(frame: CGRect(x: frame.width - 128, y: frame.height - 32, width: 128, height: 32))
+        self.fpsLabel?.textColor = UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0)
+        self.fpsLabel?.textAlignment = .center
+        self.fpsLabel?.text = "FPS ?"
+        self.fpsLabel?.isHidden = true
+        
+        self.userInterfaces.append(self.fpsLabel!) // The 1st object is always the FPS Label
+        self.view.addSubview(self.fpsLabel!)
+        
+        // A simple test label for saying just "Game Engine Preview"
+        let testLbl = UILabel(frame: CGRect(x: frame.width / 2.0 - 100, y: 48, width: 200, height: 32))
+        testLbl.textColor = UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0)
+        testLbl.textAlignment = .center
+        testLbl.text = "Game Engine Preview"
+
+        self.userInterfaces.append(testLbl)
+        self.view.addSubview(testLbl)
         
     }
 
@@ -75,20 +110,21 @@ open class GameController: UIViewController {
         self.updateScene(deltaTime: deltaTime)
         
         // Rendering related
-        self.prepareRender(deltaTime: deltaTime)
+        self.prepareToRenderSprites(deltaTime: deltaTime)
         
-        // BUG: SHOWFPS flag not working... To check...
-        #if SHOWFPS
         // Calculating the FPS
-        //self.calculateFPS(deltaTime: deltaTime)
-        #endif
-
-
+        if let fpsLabel = self.fpsLabel {
+            
+            if fpsLabel.isEnabled {
+                self.calculateFPS(deltaTime: deltaTime)
+            }
+            
+        }
             
     
     }
     
-    
+      
     
     /// Handles the Physics on the Entities.
     /// NOTE: This is called by default before every subsystem (e.g. update entities)!
@@ -151,10 +187,10 @@ open class GameController: UIViewController {
     
     
     
-    /// Handles the draw calls.
+    /// Handles the draw calls related to sprites and texture based objects.
     /// NOTE: This is called by default after the physics and entities updates!
     /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
-    private func prepareRender(deltaTime: TimeInterval) {
+    private func prepareToRenderSprites(deltaTime: TimeInterval) {
         
         guard let metalLayer = self.renderPipelineManager.metalLayer else {
             fatalError("Error! Couldn't load the metal layer!")
@@ -177,7 +213,7 @@ open class GameController: UIViewController {
         let currentRenderEncoder = commandBuffer!.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         
 
-        self.render(deltaTime: deltaTime, currentRenderEncoder: currentRenderEncoder)
+        self.renderSprites(deltaTime: deltaTime, currentRenderEncoder: currentRenderEncoder)
 
         
         currentRenderEncoder.endEncoding()
@@ -192,7 +228,7 @@ open class GameController: UIViewController {
     /// - Parameters:
     ///   - deltaTime: The frame delta time in relation of the previous and current frame time.
     ///   - currentRenderEncoder: (DO NOT MODIFY) Current Render Encoder of the GPU.
-    open func render(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
+    open func renderSprites(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
         
         for entity in self.entities {
             entity.sprite?.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
@@ -203,13 +239,15 @@ open class GameController: UIViewController {
     
     
     
+    /// Calculates the FPS and update the display with a label about how many is being calculated.
+    /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
     private func calculateFPS(deltaTime: TimeInterval) {
         
         self.amountFrames += 1
         self.currentTimeToCalcFPS += deltaTime
         
         if self.currentTimeToCalcFPS >= 1.0 {
-            print("FPS: \(self.amountFrames)")
+            self.fpsLabel?.text = "FPS: \(self.amountFrames)"
             
             self.amountFrames = 0
             self.currentTimeToCalcFPS = 0.0
@@ -227,10 +265,32 @@ open class GameController: UIViewController {
     
     
     
+    
+    /// Resets the game.
+    /// WARNING! This function must be override with your necessity  for memory management.
     open func reset() {
         
         fatalError("Error! Do not use the default reset(), please override it!")
         
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    // --------------------------- //
+    // IOS RELATED FUNCTIONS BELOW //
+    // --------------------------- //
+    
+    override open var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override open var prefersHomeIndicatorAutoHidden: Bool {
+        return true
     }
     
 }
