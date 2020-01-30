@@ -21,6 +21,7 @@ struct VertexOut {
 struct FragmentUniforms {
     float brightness;
     float4 color [[ attribute(2) ]];
+    float eulerAngle;
 };
 
 #endif /* ShaderDefinitions_h */

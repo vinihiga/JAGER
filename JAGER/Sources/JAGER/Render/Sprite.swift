@@ -17,23 +17,28 @@ public struct Shaders {
 
 public class Sprite {
     
+    // Default properties
     public var color: SIMD3<Float>!
     public var position: CGPoint { get { return self.entity?.position ?? CGPoint.zero } }
     public var size: CGSize!
+    public var eulerAngle: CGFloat! // WARNING: This property has the "Gimbal Lock" problem when using on 3D Space
     public var isHidden: Bool!
     
+    // Memory related properties
     private var controller: GameController!
     private var entity: Entity?
     private var loader: MTKTextureLoader!
     private var verticesBuffer: MTLBuffer!
     private var indexesBuffer: MTLBuffer!
     private var fragmentBuffer: MTLBuffer!
-    
     private var vertices: [Vertex]!
     private var indexes: [UInt16]!
     
+    // Material related properties
     private var texture: MTLTexture?
     private var shaders: Shaders?
+    
+    
     
     init(controller: GameController, entity: Entity, size: CGSize, color: SIMD3<Float>) {
         
@@ -42,6 +47,7 @@ public class Sprite {
         self.color = color
         self.size = size
         self.entity = entity
+        self.eulerAngle = 0
         
         self.isHidden = false
         
@@ -59,6 +65,7 @@ public class Sprite {
         self.color = color
         self.size = size
         self.entity = entity
+        self.eulerAngle = 0
         
         self.isHidden = false
         
@@ -113,6 +120,19 @@ public class Sprite {
     /// Genrates the Vertices and the Fragments buffers for the draw method.
     private func mountBuffers() {
         
+        // If the angle is more than 360 or less than -360, we get the rest of the division
+        if self.eulerAngle >= 360.0 || self.eulerAngle <= -360.0 {
+            self.eulerAngle = self.eulerAngle.truncatingRemainder(dividingBy: 360.0)
+        }
+        
+        
+        // If the angle is less than 0
+        if self.eulerAngle < 0 {
+            self.eulerAngle = 360 - self.eulerAngle
+        }
+        
+        // TODO: Optimize the vertex's attributes
+        // Setting up the vertices of the Sprite
         self.vertices = [
             // Top-Left
             Vertex(
@@ -150,7 +170,7 @@ public class Sprite {
         }
 
         let colorWithAlpha = SIMD4<Float>(self.color.x, self.color.y, self.color.z, alpha)
-        let fragmentUniforms = [Fragment(brightness: 1.0, color: colorWithAlpha)]
+        let fragmentUniforms = [Fragment(brightness: 1.0, color: colorWithAlpha, eulerAngle: Float(self.eulerAngle))]
         
         
         self.verticesBuffer = self.controller.device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: []) // Buffer 1

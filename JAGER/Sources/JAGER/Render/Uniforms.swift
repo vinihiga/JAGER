@@ -15,4 +15,5 @@ struct Vertex {
 struct Fragment {
     var brightness: Float
     var color: SIMD4<Float>
+    var eulerAngle: Float
 }
