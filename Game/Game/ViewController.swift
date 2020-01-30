@@ -27,7 +27,7 @@ class ViewController: GameController  {
         self.reset()
         
         self.fpsLabel?.isHidden = false
-
+        
     }
     
 

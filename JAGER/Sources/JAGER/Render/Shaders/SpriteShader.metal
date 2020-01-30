@@ -40,19 +40,35 @@ fragment half4 sprite_fragment(VertexIn vertexMap [[ stage_in ]],
                                texture2d<float, access::sample> texture [[ texture(0) ]]) {
     
     // Calculating the factor for each axis
-    float cosFactor = cos(uniforms.eulerAngle * M_PI_F / 180.0);
-    float sinFactor = sin(uniforms.eulerAngle * M_PI_F / 180.0);
+    half cosFactor = cos(uniforms.eulerAngle * M_PI_F / 180.0);
+    half sinFactor = sin(uniforms.eulerAngle * M_PI_F / 180.0);
     
     // Calculating the Rotation Matrix by each axis invidually
-    float newX = 0.5 + (vertexMap.texCoords.x -0.5) * cosFactor - (vertexMap.texCoords.y -0.5) * sinFactor;
-    float newY = 0.5 + (vertexMap.texCoords.x -0.5) * sinFactor + (vertexMap.texCoords.y -0.5) * cosFactor;
+    half newX = 0.5 + (vertexMap.texCoords.x -0.5) * cosFactor - (vertexMap.texCoords.y -0.5) * sinFactor;
+    half newY = 0.5 + (vertexMap.texCoords.x -0.5) * sinFactor + (vertexMap.texCoords.y -0.5) * cosFactor;
     
+    // WORKAROUND: These ifs forces the axis to be between 0 and 1, but there is a BUG...
+    // BUG: When the angles are 45 deg., 135 deg., 215 deg. or 315 deg. ... The image is glitching by creating aliases!
+    if (newX > 1.0)
+        newX = 1.0;
+    else if (newX < 0)
+        newX = 0;
+
+    if (newY > 1.0)
+        newY = 1.0;
+    else if (newY < 0)
+        newY = 0;
+    
+    
+    // Setting up the new texture coordinates
     float2 texCoordsRotated = float2(newX, newY);
     
     constexpr sampler s(address::clamp_to_edge, filter::linear);
     float4 color = texture.sample(s, texCoordsRotated);
     
-    if (uniforms.color.a == 0.0) {
+    // If the alpha is ZERO... We hide it!
+    // WORKAROUND: This workaround is related to the BUG above, where some angles can glitch the image... By creating aliases!
+    if (uniforms.color.a == 0.0 || newX == 0 || newY == 0 || newX == 1 || newY == 1) {
         return half4(0, 0, 0, 0);
     }
     

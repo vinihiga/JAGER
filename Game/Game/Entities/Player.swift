@@ -29,9 +29,7 @@ class Player: Character {
                                             Float(0.5 + 0.5 * sin(Date().timeIntervalSince1970)),
                                             Float(0.5 + 0.5 * cos(Date().timeIntervalSince1970)))
         
-        self.sprite?.eulerAngle = CGFloat(self.sprite!.eulerAngle) + CGFloat(30.0) * CGFloat(deltaTime)
-        
-        print(self.sprite?.eulerAngle)
+        self.sprite?.eulerAngle = CGFloat(self.sprite!.eulerAngle) + CGFloat(45.0) * CGFloat(deltaTime)
         
     }
     
