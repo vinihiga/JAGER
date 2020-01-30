@@ -44,7 +44,6 @@ public class RenderPipelineManager {
     
     
     
-    
     /// Mounts the current Pipeline State for the current frame.
     /// - Parameters:
     ///   - vertexShader: Vertex Shader function name
@@ -65,6 +64,7 @@ public class RenderPipelineManager {
             pipelineStateDescriptor.vertexFunction = vertexProgram
             pipelineStateDescriptor.fragmentFunction = fragmentProgram
             pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+            //pipelineStateDescriptor.sampleCount = 4
             
             // Setting the blending configurations
             pipelineStateDescriptor.colorAttachments[0].isBlendingEnabled = true
@@ -86,7 +86,6 @@ public class RenderPipelineManager {
         }
         
     }
-    
     
     
     

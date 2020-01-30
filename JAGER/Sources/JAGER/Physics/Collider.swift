@@ -13,6 +13,8 @@ public class Collider {
 
     private var entity: Entity! // Entity that has collider attached
     
+    
+    
     /// ATTENTION! This Class requires a Sprite's instance on the Entity to work!
     /// Default initializer for creating a Collider on a selected Entity.
     /// - Parameter entity: Entity to be handled by the Collider subsystem
@@ -27,6 +29,10 @@ public class Collider {
     
     }
     
+    
+    
+    /// Detects if a certain entity collides with the collider attached to another one.
+    /// - Parameter target: Entity to be collided with the Collider's Entity
     public func intercepts(_ target: Entity) -> Bool {
         
         // TODO: Change the collision algorithm to support rotated boxes

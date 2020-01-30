@@ -40,6 +40,12 @@ public class Sprite {
     
     
     
+    /// Default initializer for setting the size and color of the Sprite.
+    /// - Parameters:
+    ///   - controller: The main game controller
+    ///   - entity: The entity to be attached
+    ///   - size: The size of the sprite
+    ///   - color: The color of the sprite in RGB and values between 0 and 1
     init(controller: GameController, entity: Entity, size: CGSize, color: SIMD3<Float>) {
         
         self.controller = controller
@@ -58,6 +64,14 @@ public class Sprite {
     
     
     
+    /// Optional initializer for setting the size, color, shaders and texture of the Sprite.
+    /// - Parameters:
+    ///   - controller: The main game controller
+    ///   - entity: The entity to be attached
+    ///   - size: The size of the sprite
+    ///   - color: The color of the sprite in RGB and values between 0 and 1
+    ///   - customShaders: The shaders names to be loaded
+    ///   - texture: The image name to be loaded
     init(controller: GameController, entity: Entity, size: CGSize, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
         
         self.controller = controller

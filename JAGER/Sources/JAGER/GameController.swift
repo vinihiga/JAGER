@@ -63,8 +63,6 @@ open class GameController: UIViewController {
         self.variableTimeUpdater.add(to: RunLoop.main, forMode: .default)
         self.variableTimeUpdater.preferredFramesPerSecond = GameController.REQUIRED_FRAMETIME
     
-        
-        
     }
     
     
@@ -121,7 +119,6 @@ open class GameController: UIViewController {
             
         }
             
-    
     }
     
       
@@ -238,7 +235,6 @@ open class GameController: UIViewController {
     
     
     
-    
     /// Calculates the FPS and update the display with a label about how many is being calculated.
     /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
     private func calculateFPS(deltaTime: TimeInterval) {
@@ -262,7 +258,6 @@ open class GameController: UIViewController {
     public func addEntity(_ entity: Entity) {
         self.entities.append(entity)
     }
-    
     
     
     
