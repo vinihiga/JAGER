@@ -22,7 +22,7 @@ public class RigidBody {
     
     /// Default initializer for creating a Rigid Body on a selected Entity.
     /// - Parameter entity: Entity to be handled by the Rigid Body subsystem
-    init(entity: Entity) {
+    public init(entity: Entity) {
         
         self.entity = entity
         
@@ -37,7 +37,7 @@ public class RigidBody {
     /// Creates a falling mechanics on the current selected entity.
     /// - Parameter force: Desired amount of force
     public func fall(force: CGFloat) {
-        if self.isEnabled {
+        if self.isEnabled && self.isGravityOn {
             self.currentFallingSpeed += force * Physics.DYNAMICS_DESIRED_FRAMES_PER_SECOND
             self.entity.position.y -= self.currentFallingSpeed
         }
@@ -48,7 +48,7 @@ public class RigidBody {
     /// Creates a jump mechanics on the current selected entity.
     /// - Parameter force: Desired amount of force
     public func jump(force: CGFloat) {
-        if self.isEnabled {
+        if self.isEnabled && self.isGravityOn {
             self.currentFallingSpeed = -force * Physics.DYNAMICS_DESIRED_FRAMES_PER_SECOND
             //self.entity.position.y += self.currentFallingSpeed
         }
