@@ -22,7 +22,7 @@ class Wall: Entity {
     
     override func onCollision(with target: Entity) {
         
-        if let _ = target as? Player {
+        if target is Player {
             self.controller.reset()
         }
         

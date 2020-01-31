@@ -129,14 +129,14 @@ open class GameController: UIViewController {
         
         for entity in self.entities {
             
-            // Verifying if some body is interacting with the gravity
+            // Verifying if some rigid body is interacting with the gravity
             if entity.rigidBody != nil {
                 if entity.rigidBody!.isEnabled {
                     entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
                 }
             }
             
-            // Verifying if some body is intercepting another one
+            // Verifying if some collider is intercepting another one
             if entity.collider != nil {
                 if entity.collider!.isEnabled {
                     
