@@ -27,13 +27,14 @@ public class RigidBody {
         self.entity = entity
         
         self.isEnabled = true
+        self.isGravityOn = true
         self.isOnFloor = false
         self.mass = 1.0
+        
     }
     
     
-    // TOOD: Checar diferença entre força e impulso para esse caso específico (plataforma 2D)
-    
+
     /// Creates a falling mechanics on the current selected entity.
     /// - Parameter force: Desired amount of force
     public func fall(force: CGFloat) {
@@ -53,7 +54,6 @@ public class RigidBody {
             //self.entity.position.y += self.currentFallingSpeed
         }
     }
-    
     
     
     

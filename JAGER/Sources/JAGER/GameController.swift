@@ -265,7 +265,7 @@ open class GameController: UIViewController {
     /// WARNING! This function must be override with your necessity  for memory management.
     open func reset() {
         
-        fatalError("Error! Do not use the default reset(), please override it!")
+        fatalError("Error! Do not use the default reset(), please override it and don't forget to clear the entities list!")
         
     }
     
