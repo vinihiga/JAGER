@@ -3,7 +3,7 @@ Just A Game Engine, Right?!
 
 # Project Status
 
-iOS 11.0 (or +):
+Current Version: Alpha 0.1
 
 ![alt text](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)
 
