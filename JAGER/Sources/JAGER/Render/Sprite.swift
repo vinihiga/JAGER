@@ -11,8 +11,8 @@ import MetalKit
 import CoreGraphics
 
 public struct Shaders {
-    var vertexName: String
-    var fragmentName: String
+    public var vertexName: String
+    public var fragmentName: String
 }
 
 public class Sprite {

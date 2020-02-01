@@ -30,6 +30,7 @@ open class GameController: UIViewController {
     private var currentTimeToCalcFPS: TimeInterval = 0
     private var amountFrames: Int = 0
     open var fpsLabel: UILabel?
+    open var previewLabel: UILabel?
     
     // Scene related Variables
     public var userInterfaces = [UIView]()
@@ -83,13 +84,13 @@ open class GameController: UIViewController {
         self.view.addSubview(self.fpsLabel!)
         
         // A simple test label for saying just "Game Engine Preview"
-        let testLbl = UILabel(frame: CGRect(x: frame.width / 2.0 - 100, y: 48, width: 200, height: 32))
-        testLbl.textColor = UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0)
-        testLbl.textAlignment = .center
-        testLbl.text = "Game Engine Preview"
+        self.previewLabel = UILabel(frame: CGRect(x: frame.width / 2.0 - 100, y: 48, width: 200, height: 32))
+        self.previewLabel?.textColor = UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0)
+        self.previewLabel?.textAlignment = .center
+        self.previewLabel?.text = "Game Engine Preview"
 
-        self.userInterfaces.append(testLbl)
-        self.view.addSubview(testLbl)
+        self.userInterfaces.append(self.previewLabel!)
+        self.view.addSubview(self.previewLabel!)
         
     }
 
