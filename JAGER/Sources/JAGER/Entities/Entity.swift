@@ -22,12 +22,11 @@ open class Entity {
     private(set) var isSetToDestroy: Bool!
     
     
-    
     /// Default initializer that creates a square with a color and size.
     /// - Parameters:
     ///   - controller: The main game controller
     ///   - size: The size of the sprite
-    ///   - position: The position in the real world
+    ///   - position: The position in the world
     ///   - color: The color of the sprite in RGB and values between 0 and 1
     public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
         
@@ -45,7 +44,7 @@ open class Entity {
     /// - Parameters:
     ///   - controller: The main game controller
     ///   - size: The size of the sprite
-    ///   - position: The position in the real world
+    ///   - position: The position in the world
     ///   - color: The color of the sprite in RGB and values between 0 and 1
     ///   - customShaders: The shaders names to be loaded
     ///   - texture: The image name to be loaded
@@ -71,7 +70,7 @@ open class Entity {
     /// Optional initializer tha creates an invisible entity and without sprite.
     /// - Parameters:
     ///   - controller: The main game controller
-    ///   - position: The position in the real world
+    ///   - position: The position in the  world
     public init(controller: GameController, position: CGPoint) {
         
         self.position = position
@@ -83,9 +82,8 @@ open class Entity {
     
     
     
-    
     /// Detects if a certain entity collides with the collider attached to another one.
-    /// - Parameter target: <#target description#>
+    /// - Parameter target: The another Entity that has collided with this one
     open func onCollision(with target: Entity) {
         
         if self.collider == nil {
@@ -96,10 +94,17 @@ open class Entity {
         
     }
     
+    
+    
+    /// Updates any informations as desired.
+    /// - Parameter deltaTime: The time between previous and the current frame
     open func tick(deltaTime: TimeInterval) {
         // Do something here...
     }
     
+    
+    
+    /// Sets the flag for the engine destroy this Entity in the next frame.
     public func destroy() {
         self.isSetToDestroy = true
     }

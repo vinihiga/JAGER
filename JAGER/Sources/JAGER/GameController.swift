@@ -29,11 +29,11 @@ open class GameController: UIViewController {
     // Debugging Variables
     private var currentTimeToCalcFPS: TimeInterval = 0
     private var amountFrames: Int = 0
-    open var fpsLabel: UILabel?
-    open var previewLabel: UILabel?
+    open var fpsLabel: GUIText?
+    open var previewMessageLabel: GUIText?
     
     // Scene related Variables
-    public var userInterfaces = [UIView]()
+    public var userInterfaces = [UserInterface]()
     public var entities = [Entity]()
     
     
@@ -74,23 +74,30 @@ open class GameController: UIViewController {
         let frame = self.view.frame
         
         // FPS related label
-        self.fpsLabel = UILabel(frame: CGRect(x: frame.width - 128, y: frame.height - 32, width: 128, height: 32))
-        self.fpsLabel?.textColor = UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0)
-        self.fpsLabel?.textAlignment = .center
-        self.fpsLabel?.text = "FPS ?"
+        self.fpsLabel = GUIText(
+            controller: self,
+            size: CGSize(width: 128, height: 48),
+            position: CGPoint(x: frame.width - 128, y: frame.height - 38),
+            text: "FPS ?",
+            color: UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0))
+
         self.fpsLabel?.isHidden = true
         
         self.userInterfaces.append(self.fpsLabel!) // The 1st object is always the FPS Label
-        self.view.addSubview(self.fpsLabel!)
+        self.view.addSubview(self.fpsLabel!.label)
         
-        // A simple test label for saying just "Game Engine Preview"
-        self.previewLabel = UILabel(frame: CGRect(x: frame.width / 2.0 - 100, y: 48, width: 200, height: 32))
-        self.previewLabel?.textColor = UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0)
-        self.previewLabel?.textAlignment = .center
-        self.previewLabel?.text = "Game Engine Preview"
+        // A simple test label for saying just "Game Engine Preview"... Because it's on Alpha State... Hehe
+        self.previewMessageLabel = GUIText(
+            controller: self,
+            size: CGSize(width: 200, height: 32),
+            position: CGPoint(x: frame.width / 2.0 - 100, y: 48),
+            text: "Game Engine Preview",
+            color: UIColor(red: 1.0, green: 0.0, blue: 1.0, alpha: 1.0))
 
-        self.userInterfaces.append(self.previewLabel!)
-        self.view.addSubview(self.previewLabel!)
+        self.previewMessageLabel?.isHidden = false
+
+        self.userInterfaces.append(self.previewMessageLabel!)
+        self.view.addSubview(self.previewMessageLabel!.label)
         
     }
 
@@ -99,7 +106,7 @@ open class GameController: UIViewController {
     /// Main Game Loop.
     @objc private func loop() {
 
-        // Calculating the Delta Time from between Frames
+        // Calculating the Delta Time between Previous Frame and the Actual Frame
         let deltaTime = self.variableTimeUpdater.targetTimestamp - self.variableTimeUpdater.timestamp
         
         // Physics related
@@ -181,6 +188,19 @@ open class GameController: UIViewController {
                 currentIndex += 1
             }
         }
+        
+        currentIndex = 0
+        
+        while currentIndex < self.userInterfaces.count {
+            if self.userInterfaces[currentIndex].isSetToDestroy {
+                self.userInterfaces.remove(at: currentIndex)
+            }
+            else {
+                self.userInterfaces[currentIndex].tick(deltaTime: deltaTime)
+                currentIndex += 1
+            }
+        }
+        
     }
     
     
@@ -245,7 +265,7 @@ open class GameController: UIViewController {
         
         if self.currentTimeToCalcFPS >= 1.0 {
             self.fpsLabel?.text = "FPS: \(self.amountFrames)"
-            
+
             self.amountFrames = 0
             self.currentTimeToCalcFPS = 0.0
         }
