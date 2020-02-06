@@ -1,13 +1,17 @@
 # JAGER
 Just A Game Engine, Right?!
 
+JAGER is a FREE Open Source Game Engine for iOS platforms started by @vinnyhiga137 on January 10th - 2020, because he wanted to study how it works by coding it, but he also wanted to share his work with everyone for free.
+
+The main idea is to build a Game Engine that focus on 2D Games with Tilemap System and Realtime Shadow system by only using Swift and Objective-C.
+
 # Project Status
 
 Current Version: Alpha 0.1
 
 ![alt text](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)
 
-# About the Project
+# Milestones
 
 This project is in early version (ALPHA) and has the idea to try to build a simple 2D Game Engine for iOS devices with following features:
 
@@ -22,10 +26,7 @@ This project is in early version (ALPHA) and has the idea to try to build a simp
 
 # How to contribute
 
-You can make a Pull Request and your code will be analyzed if it's possible to be added into a future version.
-
-The requirements to your Pull Request be approved you need to follow these guidelines: [TO BE ADDED]
-
+You can contribute by helping with the current "to do tasks" on the Kanban that are being worked on "Projects" tab above.  Afther that, you can make a Pull Request and your code will be analyzed if it's possible to be added into a future version.
 
 # How to build
 
@@ -36,3 +37,7 @@ On Mac OS Catalina (x64):
 * If you want to change the Engine Code, you must open the JAGER project.
 
 * If you want to change the Game (itself) Code, you must open the Game project.
+
+# Current Contributors
+
+* **Vinícius Hiroshi Higa** - *Initial work* - [vinnyhiga137](https://github.com/vinnyhiga137)
