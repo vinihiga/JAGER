@@ -24,10 +24,6 @@ This project is in early version (ALPHA) and has the idea to try to build a simp
 * Support to basic audio system.
 * Support to custom gestures.
 
-# How to contribute
-
-You can contribute by helping with the current "to do tasks" on the Kanban that are being worked on "Projects" tab above.  Afther that, you can make a Pull Request and your code will be analyzed if it's possible to be added into a future version.
-
 # How to build
 
 On Mac OS Catalina (x64):
@@ -37,6 +33,11 @@ On Mac OS Catalina (x64):
 * If you want to change the Engine Code, you must open the JAGER project.
 
 * If you want to change the Game (itself) Code, you must open the Game project.
+
+
+# How to contribute
+
+You can contribute by helping with the current "to do tasks" on the Kanban that are being worked on "Projects" tab above.  Afther that, you can make a Pull Request and your code will be analyzed if it's possible to be added into a future version.
 
 # Current Contributors
 
