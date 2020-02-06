@@ -23,7 +23,10 @@ class Wall: Entity {
     override func onCollision(with target: Entity) {
         
         if target is Player {
-            self.controller.reset()
+            do {
+                try self.controller.getCurrentScene().reset()
+            }
+            catch {}
         }
         
     }

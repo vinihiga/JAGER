@@ -47,11 +47,10 @@ public class RigidBody {
     
     
     /// Creates a jump mechanics on the current selected entity.
-    /// - Parameter force: Desired amount of force
+    /// - Parameter force: Desired amount of force at the instant that was called (a.k.a impulse)
     public func jump(force: CGFloat) {
         if self.isEnabled && self.isGravityOn {
             self.currentFallingSpeed = -force * Physics.DYNAMICS_DESIRED_FRAMES_PER_SECOND
-            //self.entity.position.y += self.currentFallingSpeed
         }
     }
     

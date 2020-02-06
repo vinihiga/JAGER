@@ -33,16 +33,17 @@ open class GameController: UIViewController {
     open var previewMessageLabel: GUIText?
     
     // Scene related Variables
-    public var userInterfaces = [UserInterface]()
-    public var entities = [Entity]()
+    private var currentScene: Scene?
+    private var nextScene: Scene?
     
     
     
-    open func viewDidLoad(bundle: Bundle) {
+    open func viewDidLoad(bundle: Bundle, scene: Scene) {
         super.viewDidLoad()
         
         self.device = MTLCreateSystemDefaultDevice()
         self.gameBundle = bundle
+        self.currentScene = scene
         self.renderPipelineManager = RenderPipelineManager.getInstance(view: self.view, device: self.device)
         
         // TODO: Make change the viewport size when the screen rotates...
@@ -56,21 +57,32 @@ open class GameController: UIViewController {
         
         self.viewportSizeBuffer = self.device.makeBuffer(bytes: viewportSize, length: viewportSize.count * MemoryLayout<Float32>.stride, options: [])
         
-        // Drawing the UI
-        self.atStartRenderUI()
-        
+        do {
+            // Drawing the initial UI
+            try self.atStartRenderUI()
+        }
+        catch {
+            // If no start scene was provided... We must stop the application immediatelly!
+            fatalError("Error! No default scene was provided! Shutting down the App!")
+        }
+            
         // Creating and initializing the Game's main loop
         self.variableTimeUpdater = CADisplayLink(target: self, selector: #selector(loop)) // FPS Error
         self.variableTimeUpdater.add(to: RunLoop.main, forMode: .default)
         self.variableTimeUpdater.preferredFramesPerSecond = GameController.REQUIRED_FRAMETIME
+        
     
     }
     
     
     
     /// Renders at the start of the engine the User's Interfaces.
-    open func atStartRenderUI() {
+    open func atStartRenderUI() throws {
      
+        if self.currentScene == nil {
+            throw GameError.sceneNotLoaded
+        }
+    
         let frame = self.view.frame
         
         // FPS related label
@@ -83,7 +95,7 @@ open class GameController: UIViewController {
 
         self.fpsLabel?.isHidden = true
         
-        self.userInterfaces.append(self.fpsLabel!) // The 1st object is always the FPS Label
+        self.currentScene!.userInterfaces.append(self.fpsLabel!) // The 1st object is always the FPS Label
         self.view.addSubview(self.fpsLabel!.label)
         
         // A simple test label for saying just "Game Engine Preview"... Because it's on Alpha State... Hehe
@@ -96,8 +108,10 @@ open class GameController: UIViewController {
 
         self.previewMessageLabel?.isHidden = false
 
-        self.userInterfaces.append(self.previewMessageLabel!)
+        self.currentScene!.userInterfaces.append(self.previewMessageLabel!)
         self.view.addSubview(self.previewMessageLabel!.label)
+        
+    
         
     }
 
@@ -106,6 +120,11 @@ open class GameController: UIViewController {
     /// Main Game Loop.
     @objc private func loop() {
 
+        if self.nextScene != nil {
+            self.currentScene = self.nextScene
+            self.nextScene = nil
+        }
+        
         // Calculating the Delta Time between Previous Frame and the Actual Frame
         let deltaTime = self.variableTimeUpdater.targetTimestamp - self.variableTimeUpdater.timestamp
         
@@ -135,7 +154,7 @@ open class GameController: UIViewController {
     /// NOTE: This is called by default before every subsystem (e.g. update entities)!
     open func recalculateDynamics() {
         
-        for entity in self.entities {
+        for entity in self.currentScene!.entities {
             
             // Verifying if some rigid body is interacting with the gravity
             if entity.rigidBody != nil {
@@ -149,7 +168,7 @@ open class GameController: UIViewController {
                 if entity.collider!.isEnabled {
                     
                     // TODO: Optimize the algorithm for checking if the previous nodes were checked...
-                    for target in self.entities {
+                    for target in self.currentScene!.entities {
                         
                         if target !== entity {
                             let isCollided = entity.collider!.intercepts(target)
@@ -163,8 +182,8 @@ open class GameController: UIViewController {
                     
                 }
             }
-            
         }
+    
         
         
     }
@@ -179,28 +198,28 @@ open class GameController: UIViewController {
         var currentIndex = 0
         
         // TODO: I think there is some sort of algorithm / data structure that is more faster for handling memory...
-        while currentIndex < self.entities.count {
-            if self.entities[currentIndex].isSetToDestroy {
-                self.entities.remove(at: currentIndex)
+        while currentIndex < self.currentScene!.entities.count {
+            if self.currentScene!.entities[currentIndex].isSetToDestroy {
+                self.currentScene!.entities.remove(at: currentIndex)
             }
             else {
-                self.entities[currentIndex].tick(deltaTime: deltaTime)
+                self.currentScene!.entities[currentIndex].tick(deltaTime: deltaTime)
                 currentIndex += 1
             }
         }
         
         currentIndex = 0
         
-        while currentIndex < self.userInterfaces.count {
-            if self.userInterfaces[currentIndex].isSetToDestroy {
-                self.userInterfaces.remove(at: currentIndex)
+        while currentIndex < self.currentScene!.userInterfaces.count {
+            if self.currentScene!.userInterfaces[currentIndex].isSetToDestroy {
+                self.currentScene!.userInterfaces.remove(at: currentIndex)
             }
             else {
-                self.userInterfaces[currentIndex].tick(deltaTime: deltaTime)
+                self.currentScene!.userInterfaces[currentIndex].tick(deltaTime: deltaTime)
                 currentIndex += 1
             }
         }
-        
+
     }
     
     
@@ -248,7 +267,7 @@ open class GameController: UIViewController {
     ///   - currentRenderEncoder: (DO NOT MODIFY) Current Render Encoder of the GPU.
     open func renderSprites(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
         
-        for entity in self.entities {
+        for entity in self.currentScene!.entities {
             entity.sprite?.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
         }
         
@@ -277,17 +296,28 @@ open class GameController: UIViewController {
     /// Adds a new entity into the current scene.
     /// - Parameter entity: A desired entity or inherited class instance that derives from entity to be added
     public func addEntity(_ entity: Entity) {
-        self.entities.append(entity)
+        self.currentScene?.entities.append(entity)
     }
     
     
     
-    /// Resets the game.
-    /// WARNING! This function must be override with your necessity  for memory management.
-    open func reset() {
+    /// Gets the current scene.
+    public func getCurrentScene() throws -> Scene {
         
-        fatalError("Error! Do not use the default reset(), please override it and don't forget to clear the entities list!")
+        if self.currentScene == nil {
+            throw GameError.sceneNotLoaded
+        }
         
+        return self.currentScene!
+    }
+    
+    
+    
+    /// Sets the next scene.
+    /// The next scene will be loaded when the current frame is over.
+    /// - Parameter scene: An instance of the next scene
+    public func setNextScene(_ scene: Scene) {
+        self.nextScene = scene
     }
     
     
