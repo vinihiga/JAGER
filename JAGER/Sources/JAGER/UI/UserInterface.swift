@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-open class UserInterface {
+open class UserInterface: NSObject {
     
     // Default attributes
     public var size: CGSize!

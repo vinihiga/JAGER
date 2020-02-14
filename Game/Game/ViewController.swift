@@ -30,6 +30,7 @@ class ViewController: GameController  {
         catch {}
         
         self.fpsLabel?.isHidden = false
+        self.isPhysicsEnabled = false
         
     }
     
