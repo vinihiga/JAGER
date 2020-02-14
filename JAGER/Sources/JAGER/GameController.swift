@@ -27,9 +27,9 @@ open class GameController: UIViewController {
     private(set) var gameBundle: Bundle!
     
     // Debugging Variables
-    private var currentTimeToCalcFPS: TimeInterval = 0
-    private var amountFrames: Int = 0
     open var fpsLabel: GUIText?
+    private var previousFrameTime: Double = 0
+    
     open var isPhysicsEnabled: Bool = true
     
     // Scene related Variables
@@ -87,7 +87,7 @@ open class GameController: UIViewController {
         
         // Calculating the Delta Time between Previous Frame and the Actual Frame
         let deltaTime = self.variableTimeUpdater.targetTimestamp - self.variableTimeUpdater.timestamp
-        
+
         // Physics related
         self.recalculateDynamics()
         
@@ -252,15 +252,12 @@ open class GameController: UIViewController {
         }
         
         // Calculating the amount of Frames per Second
-        self.amountFrames += 1
-        self.currentTimeToCalcFPS += deltaTime
-        
-        if self.currentTimeToCalcFPS >= 1.0 {
-            self.fpsLabel?.text = "FPS: \(self.amountFrames)"
-
-            self.amountFrames = 0
-            self.currentTimeToCalcFPS = 0.0
+        if self.previousFrameTime > 0 {
+            let actualFps = 1 / (self.variableTimeUpdater.timestamp - self.previousFrameTime)
+            self.fpsLabel?.text = "FPS: \(Int(actualFps))"
         }
+        
+        self.previousFrameTime = self.variableTimeUpdater.timestamp
         
     }
     
