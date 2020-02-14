@@ -86,7 +86,8 @@ open class GameController: UIViewController {
         }
         
         // Calculating the Delta Time between Previous Frame and the Actual Frame
-        let deltaTime = self.variableTimeUpdater.targetTimestamp - self.variableTimeUpdater.timestamp
+        let deltaTime = self.variableTimeUpdater.timestamp - self.previousFrameTime
+        self.previousFrameTime = self.variableTimeUpdater.timestamp
 
         // Physics related
         self.recalculateDynamics()
@@ -253,11 +254,9 @@ open class GameController: UIViewController {
         
         // Calculating the amount of Frames per Second
         if self.previousFrameTime > 0 {
-            let actualFps = 1 / (self.variableTimeUpdater.timestamp - self.previousFrameTime)
+            let actualFps = 1 / deltaTime
             self.fpsLabel?.text = "FPS: \(Int(actualFps))"
         }
-        
-        self.previousFrameTime = self.variableTimeUpdater.timestamp
         
     }
     
