@@ -12,8 +12,11 @@ import JAGER
 
 class ViewController: GameController  {
 
+    // Games Objects and Properties
     private var player: Player!
     
+
+    /// Prepares the Main Game Loop with the Game's Objects.
     override func viewDidLoad() {
         super.viewDidLoad(bundle: Bundle.main, scene: Scene(resetExtension: self.resetExtension))
         
@@ -30,12 +33,14 @@ class ViewController: GameController  {
         catch {}
         
         self.fpsLabel?.isHidden = false
-        self.isPhysicsEnabled = false
-        
+
     }
     
 
-
+    
+    /// Auxiliary function that extends the functionality of the main scene to reset the current game state.
+    /// NOTE: You can create any amount of extensions for the reset function, but in this example we
+    /// consider there is only one scene or a.k.a "Main Scene".
     func resetExtension() {
         
         do {
@@ -62,6 +67,11 @@ class ViewController: GameController  {
     
     
     
+    /// Handles the input on touch.
+    /// NOTE: This Function do not track "Long Press" touches.
+    /// - Parameters:
+    ///   - touches: A "list" of UITouchs
+    ///   - event: The event related with the Touch
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.player.rigidBody?.jump(force: Physics.addForce(mass: 1, acceleration: 550))
     }

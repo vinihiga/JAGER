@@ -118,8 +118,43 @@ open class GameController: UIViewController {
         // Checking if the physicis is enabled...
         if self.isPhysicsEnabled {
             
+//            // Iterating for each entity to execute it's dynamics...
+//            for entity in self.currentScene!.entities {
+//
+//                // Verifying if some rigid body is interacting with the gravity
+//                if entity.rigidBody != nil {
+//                    if entity.rigidBody!.isEnabled {
+//                        entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
+//                    }
+//                }
+//
+//                // Verifying if some collider is intercepting another one
+//                if entity.collider != nil {
+//                    if entity.collider!.isEnabled {
+//
+//                        // TODO: Optimize the algorithm for checking if the previous nodes were checked...
+//                        for target in self.currentScene!.entities {
+//
+//                            if target !== entity {
+//                                let isCollided = entity.collider!.intercepts(target)
+//
+//                                if isCollided {
+//                                    entity.onCollision(with: target)
+//                                }
+//                            }
+//
+//                        }
+//
+//                    }
+//                }
+//            }
+            
+            var collidersToBeChecked = self.currentScene?.entities ?? [Entity]()
+            
             // Iterating for each entity to execute it's dynamics...
-            for entity in self.currentScene!.entities {
+            while collidersToBeChecked.count > 0 {
+
+                let entity = self.currentScene!.entities[0]
                 
                 // Verifying if some rigid body is interacting with the gravity
                 if entity.rigidBody != nil {
@@ -133,7 +168,7 @@ open class GameController: UIViewController {
                     if entity.collider!.isEnabled {
                         
                         // TODO: Optimize the algorithm for checking if the previous nodes were checked...
-                        for target in self.currentScene!.entities {
+                        for target in collidersToBeChecked {
                             
                             if target !== entity {
                                 let isCollided = entity.collider!.intercepts(target)
@@ -147,10 +182,12 @@ open class GameController: UIViewController {
                         
                     }
                 }
+                
+                // Removing the actual entity from collision detection to avoid N-checks again...
+                collidersToBeChecked.remove(at: 0)
+                
             }
-            
         }
-     
     }
     
     
