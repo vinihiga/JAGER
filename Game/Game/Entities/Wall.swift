@@ -15,7 +15,7 @@ class Wall: Entity {
     private static let SPEED = 150.0
     
     init(controller: GameController, size: CGSize, position: CGPoint) {
-        super.init(controller: controller, size: size, position: position, color: SIMD3<Float>(1.0, 1.0, 1.0))
+        super.init(controller: controller, name: "Wall", size: size, position: position, color: SIMD3<Float>(1.0, 1.0, 1.0))
 
         self.collider = Collider(entity: self)
     }

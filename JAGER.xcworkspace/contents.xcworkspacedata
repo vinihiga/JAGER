@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:JAGER/JAGER.xcodeproj">
+      location = "group:JAGER">
    </FileRef>
    <FileRef
       location = "group:Game/Game.xcodeproj">

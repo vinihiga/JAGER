@@ -19,7 +19,7 @@ class Spawner: Entity {
     
     
     private init(controller: GameController, position: CGPoint, spawnTime: TimeInterval) {
-        super.init(controller: controller, position: position)
+        super.init(controller: controller, name: "Spawner", position: position)
         
         self.currentTimeElapsed = 0.0
         self.spawnTime = spawnTime

@@ -16,6 +16,7 @@ class Player: Character {
     init(controller: GameController, size: CGSize, position: CGPoint) {
         super.init(
             controller: controller,
+            name: "Player",
             size: size,
             position: position,
             color: SIMD3<Float>(repeating: 1.0),
