@@ -9,9 +9,10 @@ import Foundation
 import CoreGraphics
 import MetalKit
 
-open class Entity {
+open class Entity: CustomStringConvertible {
     
     // Default attributes
+    public var name: String
     public var position: CGPoint
     public var rigidBody: RigidBody?
     public var collider: Collider?
@@ -28,8 +29,9 @@ open class Entity {
     ///   - size: The size of the sprite
     ///   - position: The position in the world
     ///   - color: The color of the sprite in RGB and values between 0 and 1
-    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
+    public init(controller: GameController, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
         
+        self.name = name
         self.position = position
         self.controller = controller
         self.sprite = Sprite(controller: controller, entity: self, size: size, color: color)
@@ -48,8 +50,9 @@ open class Entity {
     ///   - color: The color of the sprite in RGB and values between 0 and 1
     ///   - customShaders: The shaders names to be loaded
     ///   - texture: The image name to be loaded
-    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
+    public init(controller: GameController, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
         
+        self.name = name
         self.position = position
         self.controller = controller
         self.sprite = Sprite(controller: controller,
@@ -71,8 +74,9 @@ open class Entity {
     /// - Parameters:
     ///   - controller: The main game controller
     ///   - position: The position in the  world
-    public init(controller: GameController, position: CGPoint) {
+    public init(controller: GameController, name: String, position: CGPoint) {
         
+        self.name = name
         self.position = position
         self.controller = controller
         
@@ -107,6 +111,12 @@ open class Entity {
     /// Sets the flag for the engine destroy this Entity in the next frame.
     public func destroy() {
         self.isSetToDestroy = true
+    }
+    
+    
+    
+    open var description: String {
+        return "Object of type: \(type(of: self)) | Entity name: \(self.name)"
     }
 
     

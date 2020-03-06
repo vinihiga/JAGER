@@ -11,8 +11,9 @@ import MetalKit
 
 open class Character: Entity {
     
-    public init(controller: GameController, size: CGSize, position: CGPoint, color: SIMD3<Float>, texture: String) {
+    public init(controller: GameController, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>, texture: String) {
         super.init(controller: controller,
+                   name: name,
                    size: size,
                    position: position,
                    color: color,

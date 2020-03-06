@@ -13,32 +13,29 @@ import UIKit
 
 public class RenderPipelineManager {
     
-    private var view: UIView!
+    private var controller: GameController!
     private var device: MTLDevice!
     private static var instance: RenderPipelineManager?
     
     public var metalLayer: CAMetalLayer?
 
     
-    
-    /// Default private initializer for creating the Rendering Pipeline Manager.
-    /// - Parameters:
-    ///   - view: Main UIView for creating the Metal Layer for rendering 2D/3D graphics.
-    ///   - device: GPU interface for passing buffers.
-    private init(view: UIView, device: MTLDevice) {
+
+    // TODO: Remake the description...
+    private init(controller: GameController, device: MTLDevice) {
         
-        self.view = view
+        self.controller = controller
         self.device = device
         self.metalLayer = CAMetalLayer()
         
         self.metalLayer!.device = device
         self.metalLayer!.pixelFormat = .bgra8Unorm
         self.metalLayer!.framebufferOnly = true
-        self.metalLayer!.frame = view.layer.frame
+        self.metalLayer!.frame = self.controller.view.layer.frame
         
         self.metalLayer!.zPosition = -1
         
-        view.layer.addSublayer(self.metalLayer!) // TODO: Adicionar um deinit para remover essa layer do metal quando finalizar o jogo?
+        self.controller.view.layer.addSublayer(self.metalLayer!)
         
     }
     
@@ -51,11 +48,9 @@ public class RenderPipelineManager {
     public func mountRenderPipelineState(vertexShader: String, fragmentShader: String) -> MTLRenderPipelineState {
         
         do {
-            
-            let frameworkBundle = Bundle(for: type(of: self))
-            
+
             // Loading the shaders programs (vertex & fragment / pixel)
-            let defaultLibrary = try device.makeDefaultLibrary(bundle: frameworkBundle)
+            let defaultLibrary = try device.makeDefaultLibrary(bundle: Bundle.main)
             let vertexProgram = defaultLibrary.makeFunction(name: vertexShader)
             let fragmentProgram = defaultLibrary.makeFunction(name: fragmentShader)
                
@@ -82,7 +77,7 @@ public class RenderPipelineManager {
             
         }
         catch {
-            fatalError("Error! Couldn't generate the Render Pipeline State!")
+            fatalError("[FATAL ERROR] \(error)")
         }
         
     }
@@ -93,10 +88,10 @@ public class RenderPipelineManager {
     /// - Parameters:
     ///   - view: Main UIView for creating the Metal Layer for rendering 2D/3D graphics.
     ///   - device: GPU interface for passing buffers.
-    static public func getInstance(view: UIView, device: MTLDevice) -> RenderPipelineManager {
+    static public func getInstance(controller: GameController, device: MTLDevice) -> RenderPipelineManager {
         
         if RenderPipelineManager.instance == nil {
-            RenderPipelineManager.instance = RenderPipelineManager(view: view, device: device)
+            RenderPipelineManager.instance = RenderPipelineManager(controller: controller, device: device)
         }
         
         return RenderPipelineManager.instance!
