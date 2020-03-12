@@ -18,7 +18,7 @@ class Spawner: Entity {
     private static var instance: Spawner?
     
     
-    private init(controller: GameController, position: CGPoint, spawnTime: TimeInterval) {
+    private init(controller: Game, position: CGPoint, spawnTime: TimeInterval) {
         super.init(controller: controller, name: "Spawner", position: position)
         
         self.currentTimeElapsed = 0.0
@@ -71,7 +71,7 @@ class Spawner: Entity {
     
     
     
-    static public func getInstance(controller: GameController, position: CGPoint, spawnTime: TimeInterval) -> Spawner {
+    static public func getInstance(controller: Game, position: CGPoint, spawnTime: TimeInterval) -> Spawner {
         
         if Spawner.instance == nil {
             Spawner.instance = Spawner(controller: controller, position: position, spawnTime: spawnTime)

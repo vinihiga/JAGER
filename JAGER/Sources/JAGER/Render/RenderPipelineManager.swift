@@ -13,16 +13,18 @@ import UIKit
 
 public class RenderPipelineManager {
     
-    private var controller: GameController!
+    // Default properties related to the rendering pipeline
+    private var controller: Game!
     private var device: MTLDevice!
     private static var instance: RenderPipelineManager?
-    
     public var metalLayer: CAMetalLayer?
 
     
-
-    // TODO: Remake the description...
-    private init(controller: GameController, device: MTLDevice) {
+    /// Default private initializer for creating the Rendering Pipeline Manager.
+    /// - Parameters:
+    ///   - controller: The main game controller
+    ///   - device: GPU interface for passing buffers.
+    private init(controller: Game, device: MTLDevice) {
         
         self.controller = controller
         self.device = device
@@ -37,6 +39,44 @@ public class RenderPipelineManager {
         
         self.controller.view.layer.addSublayer(self.metalLayer!)
         
+    }
+    
+    
+    
+    /// Handles the draw calls related to sprites and texture based objects.
+    /// NOTE: This is called by default after the physics and entities updates!
+    public func renderSprites(scene: Scene) {
+        
+        guard let metalLayer = self.metalLayer else {
+            fatalError("Error! Couldn't load the metal layer!")
+        }
+        
+        let drawable = metalLayer.nextDrawable()
+        
+        let renderPassDescriptor = MTLRenderPassDescriptor()
+        renderPassDescriptor.colorAttachments[0].texture = drawable?.texture
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(
+                                                                      red: 0.0,
+                                                                      green: 0.0,
+                                                                      blue: 0.0,
+                                                                      alpha: 1.0)
+        
+        
+
+        let commandBuffer = device.makeCommandQueue()?.makeCommandBuffer()
+        let currentRenderEncoder = commandBuffer!.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
+        
+
+        // Rendering the Sprites...
+        for entity in scene.entities {
+            entity.sprite?.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self)
+        }
+        
+        currentRenderEncoder.endEncoding()
+        commandBuffer!.present(drawable!)
+        commandBuffer!.commit() // NOTE: Here is where we really draw the sprites on the GPU
+
     }
     
     
@@ -88,7 +128,7 @@ public class RenderPipelineManager {
     /// - Parameters:
     ///   - view: Main UIView for creating the Metal Layer for rendering 2D/3D graphics.
     ///   - device: GPU interface for passing buffers.
-    static public func getInstance(controller: GameController, device: MTLDevice) -> RenderPipelineManager {
+    static public func getInstance(controller: Game, device: MTLDevice) -> RenderPipelineManager {
         
         if RenderPipelineManager.instance == nil {
             RenderPipelineManager.instance = RenderPipelineManager(controller: controller, device: device)

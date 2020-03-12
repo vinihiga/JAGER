@@ -17,7 +17,7 @@ open class Entity: CustomStringConvertible {
     public var rigidBody: RigidBody?
     public var collider: Collider?
     public var sprite: Sprite?
-    public var controller: GameController!
+    public var controller: Game!
     
     // States related attributes
     private(set) var isSetToDestroy: Bool!
@@ -29,7 +29,7 @@ open class Entity: CustomStringConvertible {
     ///   - size: The size of the sprite
     ///   - position: The position in the world
     ///   - color: The color of the sprite in RGB and values between 0 and 1
-    public init(controller: GameController, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
+    public init(controller: Game, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>) {
         
         self.name = name
         self.position = position
@@ -50,7 +50,7 @@ open class Entity: CustomStringConvertible {
     ///   - color: The color of the sprite in RGB and values between 0 and 1
     ///   - customShaders: The shaders names to be loaded
     ///   - texture: The image name to be loaded
-    public init(controller: GameController, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
+    public init(controller: Game, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
         
         self.name = name
         self.position = position
@@ -74,7 +74,7 @@ open class Entity: CustomStringConvertible {
     /// - Parameters:
     ///   - controller: The main game controller
     ///   - position: The position in the  world
-    public init(controller: GameController, name: String, position: CGPoint) {
+    public init(controller: Game, name: String, position: CGPoint) {
         
         self.name = name
         self.position = position

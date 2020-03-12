@@ -12,7 +12,7 @@ import QuartzCore
 import UIKit
 import CoreGraphics
 
-open class GameController: UIViewController {
+open class Game: UIViewController {
     
     // Game Engine global parameters
     public static let REQUIRED_FRAMETIME: Int = 60
@@ -70,7 +70,7 @@ open class GameController: UIViewController {
         // Creating and initializing the Game's main loop
         self.variableTimeUpdater = CADisplayLink(target: self, selector: #selector(loop)) // FPS Error
         self.variableTimeUpdater.add(to: RunLoop.main, forMode: .default)
-        self.variableTimeUpdater.preferredFramesPerSecond = GameController.REQUIRED_FRAMETIME
+        self.variableTimeUpdater.preferredFramesPerSecond = Game.REQUIRED_FRAMETIME
         
     
     }
@@ -90,13 +90,19 @@ open class GameController: UIViewController {
         self.previousFrameTime = self.variableTimeUpdater.timestamp
 
         // Physics related
-        self.recalculateDynamics()
+        if self.isPhysicsEnabled && self.currentScene != nil {
+            Physics.calculateDynamics(entities: self.currentScene!.entities)
+        }
         
         // Update Entities
-        self.updateScene(deltaTime: deltaTime)
+        if self.currentScene != nil {
+            self.currentScene!.updateScene(deltaTime: deltaTime)
+        }
         
         // Rendering related
-        self.prepareToRenderSprites(deltaTime: deltaTime)
+        if self.currentScene != nil {
+            self.renderPipelineManager!.renderSprites(scene: self.currentScene!)
+        }
         
         // Calculating the FPS
         if let fpsLabel = self.fpsLabel {
@@ -109,135 +115,7 @@ open class GameController: UIViewController {
             
     }
     
-      
-    
-    /// Handles the Physics on the Entities.
-    /// NOTE: This is called by default before every subsystem (e.g. update entities)!
-    open func recalculateDynamics() {
-        
-        // Checking if the physicis is enabled...
-        if self.isPhysicsEnabled {
-            
-            // Iterating for each entity to execute it's dynamics...
-            for entity in self.currentScene!.entities {
 
-                // Verifying if some rigid body is interacting with the gravity
-                if entity.rigidBody != nil {
-                    if entity.rigidBody!.isEnabled {
-                        entity.rigidBody!.fall(force: Physics.addForce(mass: 1.0, acceleration: Physics.EARTH_GRAVITY_ACCEL))
-                    }
-                }
-
-                // Verifying if some collider is intercepting another one
-                if entity.collider != nil {
-                    if entity.collider!.isEnabled {
-
-                        for target in self.currentScene!.entities {
-
-                            if target !== entity {
-                                let isCollided = entity.collider!.intercepts(target)
-
-                                if isCollided {
-                                    entity.onCollision(with: target)
-                                }
-                            }
-
-                        }
-
-                    }
-                }
-            }
-            
-
-        }
-    }
-    
-    
-    
-    /// Handles the Entities ticks (user setted some sort of update) or removes from the memory.
-    /// NOTE: This is called by default after the physics calculation!
-    /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
-    private func updateScene(deltaTime: TimeInterval) {
-        
-        var currentIndex = 0
-        
-        // TODO: I think there is some sort of algorithm / data structure that is more faster for handling memory...
-        while currentIndex < self.currentScene!.entities.count {
-            if self.currentScene!.entities[currentIndex].isSetToDestroy {
-                self.currentScene!.entities.remove(at: currentIndex)
-            }
-            else {
-                self.currentScene!.entities[currentIndex].tick(deltaTime: deltaTime)
-                currentIndex += 1
-            }
-        }
-        
-        currentIndex = 0
-        
-        while currentIndex < self.currentScene!.userInterfaces.count {
-            if self.currentScene!.userInterfaces[currentIndex].isSetToDestroy {
-                self.currentScene!.userInterfaces.remove(at: currentIndex)
-            }
-            else {
-                self.currentScene!.userInterfaces[currentIndex].tick(deltaTime: deltaTime)
-                currentIndex += 1
-            }
-        }
-
-    }
-    
-    
-    
-    /// Handles the draw calls related to sprites and texture based objects.
-    /// NOTE: This is called by default after the physics and entities updates!
-    /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.
-    private func prepareToRenderSprites(deltaTime: TimeInterval) {
-        
-        guard let metalLayer = self.renderPipelineManager.metalLayer else {
-            fatalError("Error! Couldn't load the metal layer!")
-        }
-        
-        let drawable = metalLayer.nextDrawable()
-        
-        let renderPassDescriptor = MTLRenderPassDescriptor()
-        renderPassDescriptor.colorAttachments[0].texture = drawable?.texture
-        renderPassDescriptor.colorAttachments[0].loadAction = .clear
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(
-                                                                      red: 0.0,
-                                                                      green: 0.0,
-                                                                      blue: 0.0,
-                                                                      alpha: 1.0)
-        
-        
-
-        let commandBuffer = device.makeCommandQueue()?.makeCommandBuffer()
-        let currentRenderEncoder = commandBuffer!.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
-        
-
-        self.renderSprites(deltaTime: deltaTime, currentRenderEncoder: currentRenderEncoder)
-
-        
-        currentRenderEncoder.endEncoding()
-        commandBuffer!.present(drawable!)
-        commandBuffer!.commit() // NOTE: Here is where we really draw the sprites on the GPU
-
-    }
-    
-    
-    
-    /// Renders the sprites on the screen.
-    /// - Parameters:
-    ///   - deltaTime: The frame delta time in relation of the previous and current frame time.
-    ///   - currentRenderEncoder: (DO NOT MODIFY) Current Render Encoder of the GPU.
-    open func renderSprites(deltaTime: TimeInterval, currentRenderEncoder: MTLRenderCommandEncoder) {
-        
-        for entity in self.currentScene!.entities {
-            entity.sprite?.draw(renderCommandEncoder: currentRenderEncoder, renderPipelineManager: self.renderPipelineManager)
-        }
-        
-    }
-    
-    
     
     /// Calculates the FPS and update the display with a label about how many is being calculated.
     /// - Parameter deltaTime: The frame delta time in relation of the previous and current frame time.

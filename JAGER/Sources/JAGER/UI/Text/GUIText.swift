@@ -24,7 +24,7 @@ open class GUIText: UserInterface {
     ///   - controller: The main game controller
     ///   - size: The size in relation of the screen
     ///   - position: The position in the world
-    public override init(controller: GameController, size: CGSize, position: CGPoint) {
+    public override init(controller: Game, size: CGSize, position: CGPoint) {
         super.init(controller: controller, size: size, position: position)
         
         self.label = UILabel(frame: CGRect(x: position.x, y: position.y, width: size.width, height: size.height))
@@ -43,7 +43,7 @@ open class GUIText: UserInterface {
     ///   - size: The size in relation of the screen
     ///   - position: The position in the world
     ///   - text: The text / content
-    public init(controller: GameController, size: CGSize, position: CGPoint, text: String) {
+    public init(controller: Game, size: CGSize, position: CGPoint, text: String) {
         super.init(controller: controller, size: size, position: position)
         
         self.label = UILabel(frame: CGRect(x: position.x, y: position.y, width: size.width, height: size.height))
@@ -63,7 +63,7 @@ open class GUIText: UserInterface {
     ///   - position: The position in the world
     ///   - text: The text / content
     ///   - color: The color of the text
-    public init(controller: GameController, size: CGSize, position: CGPoint, text: String, color: UIColor) {
+    public init(controller: Game, size: CGSize, position: CGPoint, text: String, color: UIColor) {
         super.init(controller: controller, size: size, position: position)
         
         self.label = UILabel(frame: CGRect(x: position.x, y: position.y, width: size.width, height: size.height))

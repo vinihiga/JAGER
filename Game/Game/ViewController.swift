@@ -10,7 +10,7 @@ import UIKit
 import Metal
 import JAGER
 
-class ViewController: GameController  {
+class ViewController: Game  {
 
     // Games Objects and Properties
     private var player: Player!

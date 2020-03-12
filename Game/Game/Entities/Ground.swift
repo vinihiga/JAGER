@@ -12,7 +12,7 @@ import JAGER
 
 class Ground: Entity {
     
-    init(controller: GameController, size: CGSize, position: CGPoint) {
+    init(controller: Game, size: CGSize, position: CGPoint) {
         super.init(controller: controller, name: "Ground", size: size, position: position, color: SIMD3<Float>(1.0, 1.0, 1.0))
 
         self.collider = Collider(entity: self)

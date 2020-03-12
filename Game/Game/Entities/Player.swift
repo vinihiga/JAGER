@@ -13,7 +13,7 @@ import JAGER
 
 class Player: Character {
     
-    init(controller: GameController, size: CGSize, position: CGPoint) {
+    init(controller: Game, size: CGSize, position: CGPoint) {
         super.init(
             controller: controller,
             name: "Player",

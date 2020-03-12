@@ -13,7 +13,7 @@ open class UserInterface: NSObject {
     // Default attributes
     public var size: CGSize!
     public var position: CGPoint!
-    var controller: GameController!
+    var controller: Game!
     
     // States related attributes
     var isSetToDestroy: Bool!
@@ -23,7 +23,7 @@ open class UserInterface: NSObject {
     ///   - controller: The main game controller
     ///   - size: The size in relation of the screen
     ///   - position: The position in the world
-    public init(controller: GameController, size: CGSize, position: CGPoint) {
+    public init(controller: Game, size: CGSize, position: CGPoint) {
         
         self.controller = controller
         self.size = size

@@ -25,7 +25,7 @@ public class Sprite {
     public var isHidden: Bool!
     
     // Memory related properties
-    private var controller: GameController!
+    private var controller: Game!
     private var entity: Entity?
     private var loader: MTKTextureLoader!
     private var verticesBuffer: MTLBuffer!
@@ -46,7 +46,7 @@ public class Sprite {
     ///   - entity: The entity to be attached
     ///   - size: The size of the sprite
     ///   - color: The color of the sprite in RGB and values between 0 and 1
-    init(controller: GameController, entity: Entity, size: CGSize, color: SIMD3<Float>) {
+    init(controller: Game, entity: Entity, size: CGSize, color: SIMD3<Float>) {
         
         self.controller = controller
         
@@ -72,7 +72,7 @@ public class Sprite {
     ///   - color: The color of the sprite in RGB and values between 0 and 1
     ///   - customShaders: The shaders names to be loaded
     ///   - texture: The image name to be loaded
-    init(controller: GameController, entity: Entity, size: CGSize, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
+    init(controller: Game, entity: Entity, size: CGSize, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
         
         self.controller = controller
         
