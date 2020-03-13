@@ -48,9 +48,11 @@ open class Entity: CustomStringConvertible {
     ///   - size: The size of the sprite
     ///   - position: The position in the world
     ///   - color: The color of the sprite in RGB and values between 0 and 1
+    ///   - brightness: (OPTIONAL) The color brightness of the sprite from range  0 and 1
     ///   - customShaders: The shaders names to be loaded
     ///   - texture: The image name to be loaded
-    public init(controller: Game, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
+    public init(controller: Game, name: String, size: CGSize, position: CGPoint, color: SIMD3<Float>, brightness: Float,
+                customShaders: ShadersNames, texture: String) {
         
         self.name = name
         self.position = position
@@ -59,6 +61,7 @@ open class Entity: CustomStringConvertible {
                              entity: self,
                              size: size,
                              color: color,
+                             brightness: brightness,
                              customShaders: customShaders,
                              texture: texture)
         

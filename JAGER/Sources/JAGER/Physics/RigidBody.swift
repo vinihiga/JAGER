@@ -10,10 +10,10 @@ import CoreGraphics
 
 public class RigidBody {
     
-    public var isEnabled: Bool!
-    public var isGravityOn: Bool!
-    public var isOnFloor: Bool!
-    public var mass: CGFloat!
+    open var isEnabled: Bool!
+    open var isGravityOn: Bool!
+    open var isOnFloor: Bool!
+    open var mass: CGFloat!
     
     private var entity: Entity! // TODO: Change to support generic types
     private var currentFallingSpeed: CGFloat = 0.0

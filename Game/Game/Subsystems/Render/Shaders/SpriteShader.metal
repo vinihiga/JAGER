@@ -53,7 +53,7 @@ fragment half4 sprite_fragment(VertexIn vertexMap [[ stage_in ]],
         newX = 1.0;
     else if (newX < 0)
         newX = 0;
-
+    
     if (newY > 1.0)
         newY = 1.0;
     else if (newY < 0)
@@ -72,11 +72,11 @@ fragment half4 sprite_fragment(VertexIn vertexMap [[ stage_in ]],
         return half4(0, 0, 0, 0);
     }
     
-    return half4(color.r * uniforms.brightness * uniforms.color.r,
-                 color.g * uniforms.brightness * uniforms.color.g,
-                 color.b * uniforms.brightness * uniforms.color.b,
+    return half4((color.r * uniforms.brightness * uniforms.color.r),
+                 (color.g * uniforms.brightness * uniforms.color.g),
+                 (color.b * uniforms.brightness * uniforms.color.b),
                  color.a);
     
+    
+    
 }
-
-

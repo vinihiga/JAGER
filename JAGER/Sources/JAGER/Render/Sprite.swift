@@ -10,15 +10,9 @@ import Metal
 import MetalKit
 import CoreGraphics
 
-public struct Shaders {
-    public var vertexName: String
-    public var fragmentName: String
-}
-
 public class Sprite {
     
     // Default properties
-    public var color: SIMD3<Float>!
     public var position: CGPoint { get { return self.entity?.position ?? CGPoint.zero } }
     public var size: CGSize!
     public var eulerAngle: CGFloat! // WARNING: This property has the "Gimbal Lock" problem when using on 3D Space
@@ -36,7 +30,9 @@ public class Sprite {
     
     // Material related properties
     private var texture: MTLTexture?
-    private var shaders: Shaders?
+    private var shaders: ShadersNames?
+    public var color: SIMD3<Float>!
+    public var brightness: Float = 1.0
     
     
     
@@ -70,13 +66,20 @@ public class Sprite {
     ///   - entity: The entity to be attached
     ///   - size: The size of the sprite
     ///   - color: The color of the sprite in RGB and values between 0 and 1
+    ///   - brightness: (OPTIONAL) The color brightness of the sprite from range  0 and 1
     ///   - customShaders: The shaders names to be loaded
     ///   - texture: The image name to be loaded
-    init(controller: Game, entity: Entity, size: CGSize, color: SIMD3<Float>, customShaders: Shaders, texture: String) {
+    init(controller: Game, entity: Entity, size: CGSize, color: SIMD3<Float>, brightness: Float?,
+         customShaders: ShadersNames, texture: String) {
         
         self.controller = controller
         
         self.color = color
+        
+        if brightness != nil {
+            self.brightness = brightness!
+        }
+        
         self.size = size
         self.entity = entity
         self.eulerAngle = 0
@@ -178,13 +181,17 @@ public class Sprite {
         
         
         var alpha: Float = 1.0
-        
+
         if self.isHidden {
             alpha = 0.0
         }
+        
+        if self.brightness < 0 || self.brightness > 1.0 {
+            self.brightness = 1.0
+        }
 
         let colorWithAlpha = SIMD4<Float>(self.color.x, self.color.y, self.color.z, alpha)
-        let fragmentUniforms = [Fragment(brightness: 1.0, color: colorWithAlpha, eulerAngle: Float(self.eulerAngle))]
+        let fragmentUniforms = [Fragment(brightness: self.brightness, color: colorWithAlpha, eulerAngle: Float(self.eulerAngle))]
         
         
         self.verticesBuffer = self.controller.device.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: []) // Buffer 1

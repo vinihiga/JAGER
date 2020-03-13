@@ -14,6 +14,7 @@ class ViewController: Game  {
 
     // Games Objects and Properties
     private var player: Player!
+    private var lightEmitter: Entity!
     
 
     /// Prepares the Main Game Loop with the Game's Objects.
@@ -23,10 +24,19 @@ class ViewController: Game  {
         // Creating a Character for the Player
         self.player = Player(
                         controller: self,
-                        size: CGSize(width: 64, height: 64),
+                        size: CGSize(width: 96, height: 96),
                         position: CGPoint(x: 0, y: 0))
         
 
+        // Creating a Light Emitter for Material Testing...
+        self.lightEmitter = Entity(controller: self,
+                                   name: "Light Emitter",
+                                   size: CGSize(width: 48, height: 48),
+                                   position: CGPoint(x: 256, y: 0),
+                                   color: SIMD3<Float>(1.0, 1.0, 1.0))
+        
+        
+        
         do {
             try self.getCurrentScene().reset()
         }
@@ -52,14 +62,9 @@ class ViewController: Game  {
             self.player.rigidBody?.reset()
             self.addEntity(self.player)
             
-            
-            // Creating the ground and roof
-            let size = self.view.frame.size
-            self.addEntity(Ground(controller: self, size: CGSize(width: size.height, height: 64.0), position: CGPoint(x: 0, y: size.height - 32.0)))
-            self.addEntity(Ground(controller: self, size: CGSize(width: size.height, height: 64.0), position: CGPoint(x: 0, y: -size.height + 32.0)))
+            // Adding the Light Emitter
+            self.addEntity(self.lightEmitter)
 
-            // Creating the Spawner Handler for the Walls
-            self.addEntity(Spawner.getInstance(controller: self, position: CGPoint.zero, spawnTime: 3.0))
         }
         catch {}
 
@@ -73,7 +78,7 @@ class ViewController: Game  {
     ///   - touches: A "list" of UITouchs
     ///   - event: The event related with the Touch
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.player.rigidBody?.jump(force: Physics.addForce(mass: 1, acceleration: 550))
+       
     }
 
 }

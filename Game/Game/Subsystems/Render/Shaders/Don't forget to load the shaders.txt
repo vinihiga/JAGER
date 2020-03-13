@@ -1,0 +1,9 @@
+PLEASE READ ME!
+
+Don't forget to load the shaders before starting the game!
+
+If you don't have any metal shader, you can grab from the Game Example from the GitHub repository!
+
+https://github.com/vinnyhiga137/JAGER
+
+And don't forget to update the Uniforms on JAGER/Render/Uniforms.swift

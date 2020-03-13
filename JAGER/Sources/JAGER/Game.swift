@@ -28,6 +28,7 @@ open class Game: UIViewController {
     
     // Debugging Variables
     open var fpsLabel: GUIText?
+    private var isFirstFrame: Bool = true
     private var previousFrameTime: Double = 0
     
     open var isPhysicsEnabled: Bool = true
@@ -85,33 +86,42 @@ open class Game: UIViewController {
             self.nextScene = nil
         }
         
-        // Calculating the Delta Time between Previous Frame and the Actual Frame
-        let deltaTime = self.variableTimeUpdater.timestamp - self.previousFrameTime
-        self.previousFrameTime = self.variableTimeUpdater.timestamp
-
-        // Physics related
-        if self.isPhysicsEnabled && self.currentScene != nil {
-            Physics.calculateDynamics(entities: self.currentScene!.entities)
-        }
-        
-        // Update Entities
-        if self.currentScene != nil {
-            self.currentScene!.updateScene(deltaTime: deltaTime)
-        }
-        
-        // Rendering related
-        if self.currentScene != nil {
-            self.renderPipelineManager!.renderSprites(scene: self.currentScene!)
-        }
-        
-        // Calculating the FPS
-        if let fpsLabel = self.fpsLabel {
+        // Skipping the 1st frame to avoid unprecisasely value for the "delta time" (Time between the Frames)
+        if !self.isFirstFrame {
             
-            if fpsLabel.isEnabled {
-                self.calculateFPS(deltaTime: deltaTime)
+            // Calculating the Delta Time between Previous Frame and the Actual Frame...
+            let deltaTime = self.variableTimeUpdater.timestamp - self.previousFrameTime
+
+            // Physics related
+            if self.isPhysicsEnabled && self.currentScene != nil {
+                Physics.calculateDynamics(entities: self.currentScene!.entities)
             }
             
+            // Update Entities
+            if self.currentScene != nil {
+                self.currentScene!.updateScene(deltaTime: deltaTime)
+            }
+            
+            // Rendering related
+            if self.currentScene != nil {
+                self.renderPipelineManager!.renderSprites(scene: self.currentScene!)
+            }
+            
+            // Calculating the FPS
+            if let fpsLabel = self.fpsLabel {
+                
+                if fpsLabel.isEnabled {
+                    self.calculateFPS(deltaTime: deltaTime)
+                }
+                
+            }
         }
+        else {
+            self.isFirstFrame = false
+        }
+        
+        // Getting the last frame time...
+        self.previousFrameTime = self.variableTimeUpdater.timestamp
             
     }
     
