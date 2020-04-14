@@ -11,6 +11,10 @@ The main idea is to build a Game Engine that focus on 2D Games with Tilemap Syst
 
 **Actually this engine only (and for now) uses Metal as standard API for rendering data and Swift as main language, but the idea is to try to develop a Game Engine with a higher performance instead the ones that uses OpenGL.**
 
+### But... What about the SEE (the other Game Engine project on @vinnyhiga137 profile)?
+
+The other game engine is a pure new implementation in C++ (inspired by the Game Engine Architecture book) and with more advanced features like custom memory allocator/deallocator! And... Yeah... This project will be merged with the another to support more platforms AND WITHOUT LOSING THE MAIN FOCUS from this one, which is to use Swift and Objective-C for iOS EcoSystem!
+
 # Milestones
 
 This project is in early version (ALPHA) and has the idea to try to build a simple 2D Game Engine for iOS devices with following features:
@@ -33,7 +37,6 @@ On Mac OS Catalina (x64):
 * If you want to change the Engine Code, you must open the JAGER project.
 
 * If you want to change the Game (itself) Code, you must open the Game project.
-
 
 # How to contribute
 
